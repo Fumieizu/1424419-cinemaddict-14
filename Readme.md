@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Дмитрий Сувернев](https://up.htmlacademy.ru/ecmascript/14/user/1424419).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Шершнев](https://htmlacademy.ru/profile/shv_sergey).
 
 ---
 
