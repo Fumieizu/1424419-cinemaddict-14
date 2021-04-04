@@ -1,7 +1,7 @@
 import {createProfileRating} from './view/profile-rating.js';
 import {createSiteMenu} from './view/site-menu.js';
 import {createSiteContainer} from './view/site-content-container.js';
-import {createFilmTemplate} from './view/film-template.js';
+import {createFilmTemplate} from './view/film.js';
 import {createShowMoreButton} from './view/show-more-button.js';
 // import {createFilmPopup} from './view/film-popup.js';
 import {createSiteStatistic} from './view/site-statistic.js';
@@ -38,9 +38,9 @@ for (let i = 0;i < EXTRA_FILMS_COUNT; i++) {
 
 //Most commented
 const filmListMostCommented = siteMain.querySelector('.films-list--most-commented');
-const filmFisltMostCommentedContainer = filmListMostCommented.querySelector('.films-list__container');
+const filmListMostCommentedContainer = filmListMostCommented.querySelector('.films-list__container');
 for (let i = 0;i < EXTRA_FILMS_COUNT;i++) {
-  render(filmFisltMostCommentedContainer, createFilmTemplate(), 'beforeend');
+  render(filmListMostCommentedContainer, createFilmTemplate(), 'beforeend');
 }
 
 render(siteFooter, createSiteStatistic(), 'beforeend');
