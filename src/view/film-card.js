@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
+import {getRandomIndexElement} from '../util.js';
 
-export const createFilmTemplate = (film) => {
-  const {poster, title, rating, year, time, genre, description, comments, isFavorites, isWatched, isHistory} = film;
+export const createFilmTemplate = ({poster, title, rating, year, time, genre, description, comments, isFavorites, isWatched, isHistory}) => {
+
   const {hours, minutes} = time.$d;
 
-  const mainGenre = genre.splice(0, 1).join('');
+  const mainGenre = getRandomIndexElement(genre);
 
   const date = year !== null
     ? dayjs(year).format('YYYY')

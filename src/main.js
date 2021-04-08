@@ -6,9 +6,9 @@ import {createShowMoreButton} from './view/show-more-button.js';
 import {createFilmPopup, createFilmComment} from './view/film-popup.js';
 import {createSiteStatistic} from './view/site-statistic.js';
 import {getRandomInteger} from './util.js';
-import {generateFilm, generateComment} from './mokc/film.js';
-import {generateFilter} from './mokc/filter.js';
-import './mokc/film.js';
+import {generateFilm, generateComment} from './mock/film.js';
+import {generateFilter} from './mock/filter.js';
+import './mock/film.js';
 
 
 const FILM_COUNT = 25;

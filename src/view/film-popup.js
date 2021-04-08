@@ -6,8 +6,7 @@ const createGenres = (genre) => {
     `).join(' ');
 };
 
-export const createFilmPopup = (popups) => {
-  const {poster, title, originalName, rating, director, description, year, time, writers, ageRate, actor, genre, country, isFavorites, isWatched, isHistory} = popups;
+export const createFilmPopup = ({poster, title, originalName, rating, director, description, year, time, writers, ageRate, actor, genre, country, isFavorites, isWatched, isHistory}) => {
 
   const {hours, minutes} = time.$d;
 
@@ -17,21 +16,13 @@ export const createFilmPopup = (popups) => {
 
   const genreTemplate = createGenres(genre);
 
-  const genresCountValidation = genre.length > 1
-    ? 'Genres'
-    : 'Genre';
+  const genresCountValidation = genre.length > 1 ? 'Genres' : 'Genre';
 
-  const favoritesClassName = isFavorites
-    ? 'checked'
-    : '';
+  const favoritesClassName = isFavorites ? 'checked' : '';
 
-  const watchedClassName = isWatched
-    ? 'checked'
-    : '';
+  const watchedClassName = isWatched ? 'checked' : '';
 
-  const historyClassName = isHistory
-    ? 'checked'
-    : '';
+  const historyClassName = isHistory ? 'checked' : '';
 
 
   return `<section class="film-details">
@@ -149,8 +140,7 @@ export const createFilmPopup = (popups) => {
 </section>`;
 };
 
-export const createFilmComment = (comment) => {
-  const {text, emoji, commentator, commentTime} = comment;
+export const createFilmComment = ({text, emoji, commentator, commentTime}) => {
 
   const date = commentTime !== null
     ? dayjs(commentTime).format('YYYY/MM/DD h:mm A')

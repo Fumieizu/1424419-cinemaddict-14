@@ -13,3 +13,17 @@ export const getRandomFloatNumber = (min, max, floatPoint) => {
   const randomFloat = Math.random() * (max - min) + min;
   return randomFloat.toFixed(floatPoint);
 };
+
+export const getRandomIndexElement = (element) => {
+  const randomIndex = getRandomInteger(0, element.length - 1);
+  return element[randomIndex];
+};
+//Массив случайной длины
+export const getRandomArrayLength = (array) => {
+  const newArray = [];
+
+  for (let i = 0; i < getRandomInteger(1, array.length); i++) {
+    newArray.push(array[i]);
+  }
+  return newArray;
+};

@@ -5,10 +5,8 @@ const filmToFilterMap = {
 };
 
 export const generateFilter = (films) => {
-  return Object.entries(filmToFilterMap).map(([filterName, countFilms]) => {
-    return {
-      name: filterName,
-      count: countFilms(films),
-    };
-  });
+  return Object.entries(filmToFilterMap).map(([filterName, countFilms]) => ({
+    name: filterName,
+    count: countFilms(films),
+  }));
 };
