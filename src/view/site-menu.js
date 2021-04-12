@@ -1,3 +1,5 @@
+import {createElement} from '../util.js';
+
 const createFilterItemTemplate = (filter) =>  {
   const {name, count} = filter;
   return (`
@@ -5,7 +7,7 @@ const createFilterItemTemplate = (filter) =>  {
   `);
 };
 
-export const createSiteMenu = (filterItems) => {
+const createSiteMenu = (filterItems) => {
   const filterItemTemplate = filterItems
     .map((filter, index) => createFilterItemTemplate(filter, index === 0))
     .join('');
@@ -24,3 +26,26 @@ export const createSiteMenu = (filterItems) => {
     <li><a href="#" class="sort__button">Sort by rating</a></li>
   </ul>`;
 };
+
+export default class SiteMenu {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenu(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

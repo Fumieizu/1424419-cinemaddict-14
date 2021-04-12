@@ -141,27 +141,6 @@ const generateReleaseDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
-export const generateFilm = () => ({
-  poster: getRandomIndexElement(FILMS_POSTERS),
-  title: getRandomIndexElement(FILMS_TITLES),
-  originalName: getRandomIndexElement(FILMS_TITLES),
-  rating: getRandomFloatNumber(RatingRange.MIN, RatingRange.MAX, RatingRange.FLOAT),
-  description: generateFilmDescription(),
-  director: getRandomIndexElement(DIRECTORS),
-  year: generateReleaseDate(),
-  time: generateFilmTime(),
-  writers: getRandomArrayLength(WRITERS),
-  actor: getRandomArrayLength(ACTORS),
-  country: getRandomIndexElement(COUNTRIES),
-  ageRate: getRandomIndexElement(AGE_RATES),
-  genre: getRandomArrayLength(GENRES),
-  comments: getRandomInteger(CommentsCount.MIN, CommentsCount.MAX),
-  isFavorites: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
-  isWatched: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
-  isHistory: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
-});
-
-
 //Comments
 const generateCommentTime = () => {
   const maxDaysGap = COMMENT_TIME_MAX_DAYS_GAP;
@@ -179,3 +158,22 @@ export const generateComment = () => ({
   commentTime: generateCommentTime(),
 });
 
+export const generateFilm = () => ({
+  poster: getRandomIndexElement(FILMS_POSTERS),
+  title: getRandomIndexElement(FILMS_TITLES),
+  originalName: getRandomIndexElement(FILMS_TITLES),
+  rating: getRandomFloatNumber(RatingRange.MIN, RatingRange.MAX, RatingRange.FLOAT),
+  description: generateFilmDescription(),
+  director: getRandomIndexElement(DIRECTORS),
+  year: generateReleaseDate(),
+  time: generateFilmTime(),
+  writers: getRandomArrayLength(WRITERS),
+  actor: getRandomArrayLength(ACTORS),
+  country: getRandomIndexElement(COUNTRIES),
+  ageRate: getRandomIndexElement(AGE_RATES),
+  genre: getRandomArrayLength(GENRES),
+  comments: new Array(getRandomInteger(CommentsCount.MIN, CommentsCount.MAX)).fill().map(generateComment),
+  isFavorites: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
+  isWatched: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
+  isHistory: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
+});
