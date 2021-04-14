@@ -1,11 +1,5 @@
 import {createElement} from '../util.js';
 
-const createSiteStatistic = (count) => {
-  return `<section class="footer__statistics">
-    <p>${count} movies inside</p>
-  </section>`;
-};
-
 export default class SiteStatistic {
   constructor(count) {
     this._count = count;
@@ -13,7 +7,9 @@ export default class SiteStatistic {
   }
 
   getTemplate() {
-    return createSiteStatistic(this._count);
+    return `<section class="footer__statistics">
+    <p>${this._count} movies inside</p>
+  </section>`;
   }
 
   getElement() {

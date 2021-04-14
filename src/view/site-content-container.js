@@ -1,7 +1,12 @@
 import {createElement} from '../util.js';
 
-const createSiteContainer = () => {
-  return `<section class="films">
+export default class SiteContainer {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `<section class="films">
     <section class="films-list films-list--all-movies">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
 
@@ -21,15 +26,6 @@ const createSiteContainer = () => {
       <div class="films-list__container"></div>
     </section>
   </section>`;
-};
-
-export default class SiteContainer {
-  constructor() {
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createSiteContainer();
   }
 
   getElement() {

@@ -46,6 +46,7 @@ const createPopup = (film) => {
     evt.preventDefault();
     removePopup();
     closePopupButton.removeEventListener('click', onClickCloseButton);
+    document.removeEventListener('keydown', onEscKeyDown);
   };
 
   const onEscKeyDown = (evt) => {
@@ -61,20 +62,12 @@ const createPopup = (film) => {
 };
 
 const addListenersOnElement = (filmElement, film) => {
-  const poster = filmElement.querySelector('.film-card__poster');
-  const title = filmElement.querySelector('.film-card__title');
-  const comment = filmElement.querySelector('.film-card__comments');
+  const popupOpenElements = filmElement.querySelectorAll('.film-card__popup-open');
 
-  poster.addEventListener('click', () => {
-    createPopup(film);
-  });
-
-  title.addEventListener('click', () => {
-    createPopup(film);
-  });
-
-  comment.addEventListener('click', () => {
-    createPopup(film);
+  popupOpenElements.forEach((element) => {
+    element.addEventListener('click', () => {
+      createPopup(film);
+    });
   });
 };
 
@@ -98,8 +91,11 @@ if (films.length > FILM_COUNT_PER_STEP) {
     evt.preventDefault();
     films
       .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => render(filmContainer, new FilmTemplateView(film).getElement(), RenderPosition.BEFOREEND));
-
+      .forEach((film) => {
+        const filmItem = new FilmTemplateView(film).getElement();
+        render(filmContainer, filmItem, RenderPosition.BEFOREEND);
+        addListenersOnElement(filmItem, film);
+      });
     renderedFilmCount += FILM_COUNT_PER_STEP;
 
     if (renderedFilmCount >= films.length) {
