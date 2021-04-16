@@ -1,10 +1,12 @@
 import ProfileRatingView from './view/profile-rating.js';
 import SiteMenuView from './view/site-menu.js';
+import SortView from './view/sort.js';
 import SiteContainerView from './view/site-content-container.js';
 import FilmTemplateView from './view/film-card.js';
 import ShowMoreButtonView from './view/show-more-button.js';
 import FilmPopupView from './view/film-popup.js';
 import SiteStatisticView from './view/site-statistic.js';
+import NoFilmView from './view/no-film.js';
 import {RenderPosition, render} from './util.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
@@ -27,7 +29,14 @@ render(siteHeader, new ProfileRatingView().getElement(), RenderPosition.BEFOREEN
 render(siteMain, new SiteMenuView(filters).getElement(), RenderPosition.BEFOREEND);
 
 const siteContainer = new SiteContainerView();
-render(siteMain, siteContainer.getElement(), RenderPosition.BEFOREEND);
+
+if (films.length === 0) {
+  render(siteMain, new NoFilmView().getElement(), RenderPosition.BEFOREEND);
+} else {
+  render(siteMain, new SortView().getElement(), RenderPosition.BEFOREEND);
+  render(siteMain, siteContainer.getElement(), RenderPosition.BEFOREEND);
+}
+
 
 const createPopup = (film) => {
   const popupElement = new FilmPopupView(film).getElement();
@@ -62,13 +71,14 @@ const createPopup = (film) => {
 };
 
 const addListenersOnElement = (filmElement, film) => {
-  const popupOpenElements = filmElement.querySelectorAll('.film-card__popup-open');
 
-  popupOpenElements.forEach((element) => {
-    element.addEventListener('click', () => {
-      createPopup(film);
+
+  filmElement.querySelectorAll('.film-card__popup-open')
+    .forEach((element) => {
+      element.addEventListener('click', () => {
+        createPopup(film);
+      });
     });
-  });
 };
 
 //All movies
