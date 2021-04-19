@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
-import {getRandomInteger, getRandomFloatNumber, getRandomIndexElement, getRandomArrayLength} from '../util.js';
+import {getRandomInteger, getRandomFloatNumber, getRandomIndexElement, getRandomArrayLength} from '../utils/common.js';
 
 const FILMS_POSTERS = [
   'made-for-each-other.png',

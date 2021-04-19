@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import {createElement, getRandomIndexElement} from '../util.js';
+import {getRandomIndexElement} from '../utils/common.js';
+import AbstractView from './abstract.js';
 
 const createFilmTemplate = ({poster, title, rating, year, time, genre, description, comments, isFavorites, isWatched, isHistory}) => {
 
@@ -46,25 +47,27 @@ const createFilmTemplate = ({poster, title, rating, year, time, genre, descripti
         </article>`;
 };
 
-export default class FilmTemplate {
+export default class FilmTemplate extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+    this._popupClickHandler = this._popupClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmTemplate (this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _popupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setPopupClickHandler(callback) {
+    this._callback.popupClick = callback;
+    this.getElement().querySelectorAll('.film-card__popup-open')
+      .forEach((element) => {
+        element.addEventListener('click', this._popupClickHandler);
+      });
   }
 }
