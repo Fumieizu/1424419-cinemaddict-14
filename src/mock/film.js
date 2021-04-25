@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 import {getRandomInteger, getRandomFloatNumber, getRandomIndexElement, getRandomArrayLength} from '../utils/common.js';
@@ -159,6 +160,7 @@ export const generateComment = () => ({
 });
 
 export const generateFilm = () => ({
+  id: nanoid(),
   poster: getRandomIndexElement(FILMS_POSTERS),
   title: getRandomIndexElement(FILMS_TITLES),
   originalName: getRandomIndexElement(FILMS_TITLES),
@@ -172,6 +174,7 @@ export const generateFilm = () => ({
   country: getRandomIndexElement(COUNTRIES),
   ageRate: getRandomIndexElement(AGE_RATES),
   genre: getRandomArrayLength(GENRES),
+  mainGenre: getRandomIndexElement(GENRES),
   comments: new Array(getRandomInteger(CommentsCount.MIN, CommentsCount.MAX)).fill().map(generateComment),
   isFavorites: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
   isWatched: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
