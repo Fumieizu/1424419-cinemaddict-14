@@ -84,14 +84,13 @@ export default class film {
     render(this._popupContainer, this._popupComponent, RenderPosition.BEFOREEND);
     this._mode = Mode.POPUP;
     document.addEventListener('keydown', this._onEscKeyDownHandler);
-    document.removeEventListener('keydown', this._onEscKeyDownHandler);
-
   }
 
   _removePopup() {
     this._popupContainer.removeChild(this._popupComponent.getElement());
     this._popupContainer.classList.remove('hide-overflow');
     this._mode = Mode.DEFAULT;
+    document.removeEventListener('keydown', this._onEscKeyDownHandler);
   }
 
   _handleCloseButtonClick() {
