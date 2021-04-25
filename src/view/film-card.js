@@ -1,12 +1,9 @@
 import dayjs from 'dayjs';
-import {getRandomIndexElement} from '../utils/common.js';
 import AbstractView from './abstract.js';
 
-const createFilmTemplate = ({poster, title, rating, year, time, genre, description, comments, isFavorites, isWatched, isHistory}) => {
+const createFilmTemplate = ({poster, title, rating, year, time, mainGenre, description, comments, isFavorites, isWatched, isHistory}) => {
 
   const {hours, minutes} = time.$d;
-
-  const mainGenre = getRandomIndexElement(genre);
 
   const date = year !== null
     ? dayjs(year).format('YYYY')
@@ -52,10 +49,28 @@ export default class FilmTemplate extends AbstractView {
     super();
     this._film = film;
     this._popupClickHandler = this._popupClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._historyClickHandler = this._historyClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmTemplate (this._film);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _historyClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.historyClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
   }
 
   _popupClickHandler(evt) {
@@ -69,5 +84,20 @@ export default class FilmTemplate extends AbstractView {
       .forEach((element) => {
         element.addEventListener('click', this._popupClickHandler);
       });
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  setHistoryClickHandler(callback) {
+    this._historyClickHandler = callback;
+    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this._historyClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._watchedClickHandler = callback;
+    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this._watchedClickHandler);
   }
 }
