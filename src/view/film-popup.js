@@ -180,27 +180,6 @@ export default class FilmPopup extends AbstractView {
     return createFilmPopup(this._film);
   }
 
-  _closeButtonClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.closeButtonClick();
-  }
-
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  }
-
-  _historyClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.historyClick();
-  }
-
-  _watchedClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.watchedClick();
-  }
-
-
   setCloseButtonHandler(callback) {
     this._callback.closeButtonClick = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeButtonClickHandler);
@@ -219,5 +198,25 @@ export default class FilmPopup extends AbstractView {
   setWatchedClickHandler(callback) {
     this._watchedClickHandler = callback;
     this.getElement().querySelector('#watched').addEventListener('click', this._watchedClickHandler);
+  }
+
+  _closeButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeButtonClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _historyClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.historyClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
   }
 }
