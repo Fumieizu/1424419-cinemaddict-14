@@ -23,4 +23,16 @@ export default class SiteContainer extends AbstractView {
     </section>
   </section>`;
   }
+
+  getFilmListAllMovies() {
+    return this.getElement().querySelector('.films-list--all-movies');
+  }
+
+  getFilmListTopRated() {
+    return  this.getElement().querySelector('.films-list--top-rated');
+  }
+
+  getFilmListMostCommented () {
+    return  this.getElement().querySelector('.films-list--most-commented');
+  }
 }

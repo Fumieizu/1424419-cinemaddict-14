@@ -30,10 +30,6 @@ export default class FilmBoard {
 
     this._currentSortType = SortType.DEFAULT;
 
-    this._filmListAllMovies = this._siteContainer.getElement().querySelector('.films-list--all-movies');
-    this._filmListTopRated = this._siteContainer.getElement().querySelector('.films-list--top-rated');
-    this._filmListMostCommented = this._siteContainer.getElement().querySelector('.films-list--most-commented');
-
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleFilmChange = this._handleFilmChange.bind(this);
@@ -75,18 +71,11 @@ export default class FilmBoard {
   }
 
   _handleModeChange() {
-    //как в DRY?
-    Object
-      .values(this._filmPresenters.allFilmsList)
-      .forEach((presenter) => presenter.resetView());
-
-    Object
-      .values(this._filmPresenters.topRatingList)
-      .forEach((presenter) => presenter.resetView());
-
-    Object
-      .values(this._filmPresenters.mostCommentList)
-      .forEach((presenter) => presenter.resetView());
+    Object.values(this._filmPresenters).forEach((store) => {
+      Object.values(store).forEach((presenter) => {
+        presenter.resetView();
+      });
+    });
   }
 
   _handleSortTypeChange(sortType) {
@@ -156,7 +145,7 @@ export default class FilmBoard {
   }
 
   _renderShowMoreButton() {
-    render(this._filmListAllMovies, this._showMoreButton, RenderPosition.BEFOREEND);
+    render(this._siteContainer.getFilmListAllMovies(), this._showMoreButton, RenderPosition.BEFOREEND);
 
     this._showMoreButton.setClickHandler(this._handleShowMoreButtonClick);
   }
@@ -171,7 +160,7 @@ export default class FilmBoard {
   }
 
   _renderAllFilms() {
-    this._filmContainer = this._filmListAllMovies.querySelector('.films-list__container');
+    this._filmContainer = this._siteContainer.getFilmListAllMovies().querySelector('.films-list__container');
     this._renderFilms(this._filmContainer,  this._films, 0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
     if (this._films.length > FILM_COUNT_PER_STEP) {
@@ -180,14 +169,14 @@ export default class FilmBoard {
   }
 
   _renderTopRatedFilm() {
-    this._filmListTopRatedContainer = this._filmListTopRated.querySelector('.films-list__container');
+    this._filmListTopRatedContainer = this._siteContainer.getFilmListTopRated().querySelector('.films-list__container');
 
     const ratedFilm = this._films.slice().sort((a, b) => b.rating - a.rating);
     this._renderFilms(this._filmListTopRatedContainer, ratedFilm, 0, Math.min(this._films.length, EXTRA_FILMS_COUNT));
   }
 
   _renderMostCommented() {
-    this._filmListMostCommentedContainer = this._filmListMostCommented.querySelector('.films-list__container');
+    this._filmListMostCommentedContainer = this._siteContainer.getFilmListMostCommented().querySelector('.films-list__container');
 
     const mostCommented = this._films.slice().sort((a, b) => b.comments.length - a.comments.length);
 
