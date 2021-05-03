@@ -94,6 +94,7 @@ export default class film {
   }
 
   _handleCloseButtonClick() {
+    this._popupComponent.reset(this._film);
     this._removePopup();
     document.removeEventListener('keydown', this._onEscKeyDownHandler);
   }
@@ -101,8 +102,17 @@ export default class film {
   _onEscKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this._popupComponent.reset(this._film);
       this._removePopup();
       document.removeEventListener('keydown', this._onEscKeyDownHandler);
+    }
+
+    if (evt.ctrlKey && evt.key === 'Enter') {
+      evt.preventDefault();
+
+      /*if (this._popupComponent.emotion) {
+
+      }*/
     }
   }
 
