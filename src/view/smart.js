@@ -27,21 +27,18 @@ export default class Smart extends Abstract {
   updateElement() {
     const prevElement = this.getElement();
     const parent = prevElement.parentElement;
+    this._scroll = prevElement.scrollTop;
     this.removeElement();
 
     const newElement = this.getElement();
 
     parent.replaceChild(newElement, prevElement);
+    newElement.scrollTop = this._scroll;
 
     this.restoreHandler();
   }
 
-  restoreHandler() {
-    this._setInnerHandler();
-
-    this.setCloseButtonHandler(this._callback.closeButtonClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-    this.setHistoryClickHandler(this._historyClickHandler);
-    this.setWatchedClickHandler(this._watchedClickHandler);
+  restoreHandlers() {
+    throw new Error('Abstract method not implemented: resetHandlers');
   }
 }

@@ -1,5 +1,6 @@
 import FilmTemplateView from '../view/film-card.js';
 import FilmPopupView from '../view/film-popup.js';
+import {UserAction, UpdateType} from '../const.js';
 import {RenderPosition, render, remove, replace} from '../utils/render.js';
 
 const Mode = {
@@ -8,11 +9,12 @@ const Mode = {
 };
 
 export default class film {
-  constructor(filmContainer, popupContainer, changeData, changeMode) {
+  constructor(filmContainer, popupContainer, changeData, changeMode, commentsModel) {
     this._filmContainer = filmContainer;
     this._popupContainer = popupContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._commentsModel = commentsModel;
 
 
     this._filmComponent = null;
@@ -34,7 +36,8 @@ export default class film {
     const prevPopupComponent = this._popupComponent;
 
     this._filmComponent = new FilmTemplateView(film);
-    this._popupComponent = new FilmPopupView(film);
+    this._popupComponent = new FilmPopupView(film, this._commentsModel.getComments());
+
 
     this._filmComponent.setPopupClickHandler(this._handleClick);
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteListClick);
@@ -45,6 +48,7 @@ export default class film {
     this._popupComponent.setFavoriteClickHandler(this._handleFavoriteListClick);
     this._popupComponent.setHistoryClickHandler(this._handleWatchListClick);
     this._popupComponent.setWatchedClickHandler(this._handleWatchedListClick);
+    // this._popupComponent.setDeleteCommentHandler(this._handleCommentDeleteClick);
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       render(this._filmContainer, this._filmComponent, RenderPosition.BEFOREEND);
@@ -65,7 +69,7 @@ export default class film {
 
   destroy() {
     remove(this._filmComponent);
-    remove(this._popupComponent);
+    // remove(this._popupComponent);
   }
 
   resetView() {
@@ -106,18 +110,12 @@ export default class film {
       this._removePopup();
       document.removeEventListener('keydown', this._onEscKeyDownHandler);
     }
-
-    if (evt.ctrlKey && evt.key === 'Enter') {
-      evt.preventDefault();
-
-      /*if (this._popupComponent.emotion) {
-
-      }*/
-    }
   }
 
   _handleWatchedListClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -130,13 +128,22 @@ export default class film {
 
   _handleFavoriteListClick() {
     this._changeData(
-      Object.assign({}, this._film, {isFavorites: !this._film.isFavorites},
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
+      Object.assign(
+        {},
+        this._film,
+        {
+          isFavorites: !this._film.isFavorites,
+        },
       ),
     );
   }
 
   _handleWatchListClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -146,4 +153,16 @@ export default class film {
       ),
     );
   }
+
+  /*_handleCommentDeleteClick(comment) {
+    this._changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      comment,
+    );
+  }*/
+
+  /*_handleSendComment() {
+
+  }*/
 }
