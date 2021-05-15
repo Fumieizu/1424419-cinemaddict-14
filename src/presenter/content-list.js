@@ -142,7 +142,7 @@ export default class FilmBoard {
   }
 
   _renderFilm(container, film) {
-    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel, this._setActivePopupId, this._getFilms());
+    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel, this._setActivePopupId);
     filmPresenter.init(film);
 
     if (film.id === this._activePopupId) {

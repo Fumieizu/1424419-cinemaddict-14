@@ -6,7 +6,7 @@ import FilterModel from './model/filter';
 import SiteStatisticView from './view/site-statistic.js';
 import ProfileRatingView from './view/profile-rating.js';
 import {RenderPosition, render} from './utils/render';
-import {generateFilm, generateComment} from './mock/film.js';
+import {generateFilm} from './mock/film.js';
 import {generateProfileRank} from './utils/profile-rank.js';
 import './mock/film.js';
 
