@@ -14,6 +14,7 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  WITH_POPUP: 'WITH_POPUP',
 };
 
 export const FilterType = {

@@ -29,4 +29,14 @@ export default class Films extends Observer {
 
     this._notify(updateType, update);
   }
+
+  addComment(updateType, update) {
+    this._films = [
+      update,
+      ...this._films,
+    ];
+
+    this._notify(updateType, update);
+  }
 }
+

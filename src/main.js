@@ -12,10 +12,8 @@ import './mock/film.js';
 
 
 const FILM_COUNT = 25;
-const COMMENTS_COUNT = 50;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilm);
-const comments = new Array(COMMENTS_COUNT).fill().map(generateComment);
 
 const profileRating = generateProfileRank(films);
 
@@ -23,7 +21,6 @@ const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
 const commentsModel = new CommentsModel();
-commentsModel.setComments(comments);
 
 const filterModel = new FilterModel();
 

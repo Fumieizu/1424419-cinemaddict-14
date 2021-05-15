@@ -27,6 +27,8 @@ export default class FilmBoard {
       mostCommentList: {},
     };
 
+    this._activePopupId = null;
+
     this._siteContainer = new SiteContainerView();
     this._sort = null;
     this._noFilm = new NoFilmView();
@@ -40,6 +42,7 @@ export default class FilmBoard {
     this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._setActivePopupId = this._setActivePopupId.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -79,10 +82,10 @@ export default class FilmBoard {
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
-        this._commentsModel.addComment(updateType, update);
+        this._filmsModel.addComment(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, update);
+        this._filmsModel.updateFilm(updateType, update);
         break;
     }
   }
@@ -139,8 +142,13 @@ export default class FilmBoard {
   }
 
   _renderFilm(container, film) {
-    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel);
+    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel, this._setActivePopupId, this._getFilms());
     filmPresenter.init(film);
+
+    if (film.id === this._activePopupId) {
+      filmPresenter.showPopup();
+    }
+
 
     switch (container) {
       case this._filmContainer:
@@ -262,5 +270,9 @@ export default class FilmBoard {
     this._filmListMostCommentedContainer = this._siteContainer.getFilmListMostCommented().querySelector('.films-list__container');
 
     this._renderFilms(this._filmListMostCommentedContainer, film);
+  }
+
+  _setActivePopupId(id) {
+    this._activePopupId = id;
   }
 }

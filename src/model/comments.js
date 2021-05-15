@@ -30,7 +30,7 @@ export default class Comments extends Observer {
     this._notify(updateType, update);
   }
 
-  addComment(updateType, update) {
+/*  addComment(updateType, update) {
     this._comments = [
       update,
       ...this._comments,
@@ -52,5 +52,5 @@ export default class Comments extends Observer {
     ];
 
     this._notify(updateType);
-  }
+  }*/
 }
