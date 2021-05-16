@@ -3,6 +3,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import SmartView from './smart';
 import he from 'he';
+import {nanoid} from 'nanoid';
 
 const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
 
@@ -158,11 +159,9 @@ const createFilmPopup = ({poster, title, originalName, emotion, comment, comment
 };
 
 export default class FilmPopup extends SmartView {
-  constructor(film /*comment*/) {
+  constructor(film) {
     super();
-    // this._comment = comment;
     this._data = FilmPopup.parsFilmToData(film);
-    this._newComment = {};
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._historyClickHandler = this._historyClickHandler.bind(this);
@@ -188,6 +187,23 @@ export default class FilmPopup extends SmartView {
         comment: '',
       },
     );
+  }
+
+  static parsDataToFilm(data) {
+    const film = Object.assign({}, data);
+
+    film.comments.unshift({ //Нужно новый коммент добавлять в начало или в конец массива?
+      id: nanoid(),
+      text: data.comment,
+      emoji: `${data.emotion}.png`,
+      commentator: null,
+      commentTime: null,
+    });
+
+    delete film.comment;
+    delete film.emotion;
+
+    return film;
   }
 
   setCloseButtonHandler(callback) {
@@ -218,12 +234,9 @@ export default class FilmPopup extends SmartView {
 
   setFormSubmitHandler(callback) {
     this._callback.submitHandler = callback;
-    this.getElement().querySelector('form').addEventListener('keydown', (evt) => {
-      if (evt.key === 'Enter' && (evt.metaKey || evt.ctrlKey)) {
-        this._formSubmitHandler(evt);
-      }
-    });
+    this.getElement().querySelector('.film-details__inner').addEventListener('keydown', this._formSubmitHandler);
   }
+
 
   reset(film) {
     this.updateData(
@@ -254,20 +267,12 @@ export default class FilmPopup extends SmartView {
   }
 
   _formSubmitHandler(evt) {
-    if (evt.key === 'Enter' && (evt.metaKey || evt.ctrlKey)) {
+    if (evt.ctrlKey && evt.key === 'Enter' || evt.metaKey && evt.key === 'Enter') {
+      if (!this._data.emotion || !this._data.comment) {
+        return;
+      }
       evt.preventDefault();
-
-      const newComment = {
-        text: this._data.comment,
-        emoji: this._data.emotion,
-      };
-
-      this._callback.submitHandler(FilmPopup.parsFilmToData(newComment));
-
-      this.updateData({
-        emotion: null,
-        comment: '',
-      });
+      this._callback.submitHandler(FilmPopup.parsDataToFilm(this._data));
     }
   }
 

@@ -175,10 +175,7 @@ export default class film {
       UpdateType.MINOR,
       Object.assign(
         {},
-        this._film,
-        {
-          newComment,
-        },
+        newComment,
       ),
     );
   }
