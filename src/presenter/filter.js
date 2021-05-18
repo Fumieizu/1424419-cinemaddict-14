@@ -22,7 +22,7 @@ export default class Filter {
     const filter = this._getFilters();
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new SiteMenuView(filter, this._filterModel.getFilter());
+    this._filterComponent = new SiteMenuView(filter, this._filterModel.get());
 
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
@@ -40,15 +40,15 @@ export default class Filter {
   }
 
   _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
+    if (this._filterModel.get() === filterType) {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this._filterModel.set(UpdateType.MAJOR, filterType);
   }
 
   _getFilters() {
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.get();
 
     return [
       {

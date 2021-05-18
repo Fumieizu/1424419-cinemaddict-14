@@ -80,16 +80,19 @@ export default class film {
     }
   }
 
-  showPopup() {
+  showPopup(scroll) {
     this._changeMode();
     this._renderPopup();
+    this._popupComponent.getElement().scrollTop = scroll;
   }
 
   _renderPopup() {
     this._popupContainer.classList.add('hide-overflow');
     render(this._popupContainer, this._popupComponent, RenderPosition.BEFOREEND);
     this._mode = Mode.POPUP;
-    this._onPopupOpen(this._film.id);
+    this._onPopupOpen({
+      id: this._film.id,
+    });
     document.addEventListener('keydown', this._onEscKeyDownHandler);
   }
 
@@ -116,18 +119,31 @@ export default class film {
     }
   }
 
-  _handleCommentDeleteClick(comment) {
-    this._film.comments.splice(comment, 1); //хоть spcile и мутирует исходные данные,
-    this._changeData(                                  // я не придумал(не смог реализовать) что нибудь получше
-      UserAction.DELETE_COMMENT,
+  _handleCommentDeleteClick(commentId) {
+    this._onPopupOpen({
+      scrollPosition: this._popupComponent.getElement().scrollTop,
+    });
+
+    const newComments = this._film.comments.filter((comment) => comment.id !== commentId);
+
+    this._changeData(
+      UserAction.UPDATE_FILM,
       UpdateType.MINOR,
-      Object.assign({},
+      Object.assign(
+        {},
         this._film,
+        {
+          comments: newComments,
+        },
       ),
     );
   }
 
   _handleWatchedListClick() {
+    this._onPopupOpen({
+      scrollPosition: this._popupComponent.getElement().scrollTop,
+    });
+
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
@@ -142,6 +158,10 @@ export default class film {
   }
 
   _handleFavoriteListClick() {
+    this._onPopupOpen({
+      scrollPosition: this._popupComponent.getElement().scrollTop,
+    });
+
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
@@ -156,6 +176,10 @@ export default class film {
   }
 
   _handleWatchListClick() {
+    this._onPopupOpen({
+      scrollPosition: this._popupComponent.getElement().scrollTop,
+    });
+
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
@@ -170,12 +194,24 @@ export default class film {
   }
 
   _handleFormSubmit(newComment) {
+    const newComments = [
+      ...this._film.comments,
+      newComment,
+    ];
+
+    this._onPopupOpen({
+      scrollPosition: this._popupComponent.getElement().scrollTop,
+    });
+
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
       Object.assign(
         {},
-        newComment,
+        this._film,
+        {
+          comments: newComments,
+        },
       ),
     );
   }

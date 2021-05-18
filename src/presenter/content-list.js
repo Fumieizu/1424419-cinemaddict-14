@@ -27,7 +27,7 @@ export default class FilmBoard {
       mostCommentList: {},
     };
 
-    this._activePopupId = null;
+    this._activePopupState = null;
 
     this._siteContainer = new SiteContainerView();
     this._sort = null;
@@ -42,7 +42,7 @@ export default class FilmBoard {
     this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._setActivePopupId = this._setActivePopupId.bind(this);
+    this._setActivePopupState = this._setActivePopupState.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -52,9 +52,9 @@ export default class FilmBoard {
     this._renderFilmBoard();
   }
 
-  _getFilms() {
-    const filterType = this._filterModel.getFilter();
-    const films = this._filmsModel.getFilms();
+  _get() {
+    const filterType = this._filterModel.get();
+    const films = this._filmsModel.get();
     const filtredFilms = filter[filterType](films);
 
     switch (this._currentSortType) {
@@ -79,13 +79,7 @@ export default class FilmBoard {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._filmsModel.updateFilm(updateType, update);
-        break;
-      case UserAction.ADD_COMMENT:
-        this._filmsModel.addComment(updateType, update);
-        break;
-      case UserAction.DELETE_COMMENT:
-        this._filmsModel.updateFilm(updateType, update);
+        this._filmsModel.update(updateType, update);
         break;
     }
   }
@@ -130,7 +124,7 @@ export default class FilmBoard {
   }
 
   _renderFilmBoard() {
-    if (this._getFilms().length === 0) {
+    if (this._get().length === 0) {
       return this._renderNoFilm();
     }
 
@@ -142,11 +136,11 @@ export default class FilmBoard {
   }
 
   _renderFilm(container, film) {
-    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel, this._setActivePopupId);
+    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel, this._setActivePopupState);
     filmPresenter.init(film);
 
-    if (film.id === this._activePopupId) {
-      filmPresenter.showPopup();
+    if (this._activePopupState !==null && film.id === this._activePopupState.id) {
+      filmPresenter.showPopup(this._activePopupState.scrollPosition);
     }
 
 
@@ -187,9 +181,9 @@ export default class FilmBoard {
   }
 
   _handleShowMoreButtonClick() {
-    const filmCount = this._getFilms().length;
+    const filmCount = this._get().length;
     const newRenderedFilmCount = Math.min(filmCount, this._renderedFilmCount + FILM_COUNT_PER_STEP);
-    const films = this._getFilms().slice(this._renderedFilmCount, newRenderedFilmCount);
+    const films = this._get().slice(this._renderedFilmCount, newRenderedFilmCount);
 
     this._renderFilms(this._filmContainer, films);
     this._renderedFilmCount = newRenderedFilmCount;
@@ -212,7 +206,7 @@ export default class FilmBoard {
   }
 
   _clearFilmList({resetRenderedFilmCount = false, resetSortType = false} = {}) {
-    const filmCount = this._getFilms().length;
+    const filmCount = this._get().length;
 
     Object.values(this._filmPresenters).forEach((store) => {
       Object.values(store).forEach((presenter) => {
@@ -239,8 +233,8 @@ export default class FilmBoard {
   }
 
   _renderAllFilms() {
-    const filmsCount = this._getFilms().length;
-    const films = this._getFilms().slice(0, Math.min(filmsCount, this._renderedFilmCount));
+    const filmsCount = this._get().length;
+    const films = this._get().slice(0, Math.min(filmsCount, this._renderedFilmCount));
 
     this._filmContainer = this._siteContainer.getFilmListAllMovies().querySelector('.films-list__container');
     this._renderFilms(this._filmContainer,  films);
@@ -251,8 +245,8 @@ export default class FilmBoard {
   }
 
   _renderTopRatedFilm() {
-    const filmsCount = this._getFilms().length;
-    const ratedFilm = this._getFilms().slice().sort((a, b) => b.rating - a.rating);
+    const filmsCount = this._get().length;
+    const ratedFilm = this._get().slice().sort((a, b) => b.rating - a.rating);
 
     const film = ratedFilm.slice(0, Math.min(filmsCount, EXTRA_FILMS_COUNT));
 
@@ -262,8 +256,8 @@ export default class FilmBoard {
   }
 
   _renderMostCommented() {
-    const filmsCount = this._getFilms().length;
-    const mostCommented = this._getFilms().slice().sort((a, b) => b.comments.length - a.comments.length);
+    const filmsCount = this._get().length;
+    const mostCommented = this._get().slice().sort((a, b) => b.comments.length - a.comments.length);
 
     const film = mostCommented.slice(0, Math.min(filmsCount, EXTRA_FILMS_COUNT));
 
@@ -272,7 +266,13 @@ export default class FilmBoard {
     this._renderFilms(this._filmListMostCommentedContainer, film);
   }
 
-  _setActivePopupId(id) {
-    this._activePopupId = id;
+  _setActivePopupState(params) {
+    if (params === null) {
+      this._activePopupState = {};
+
+      return;
+    }
+
+    this._activePopupState = Object.assign({}, this._activePopupState, params);
   }
 }

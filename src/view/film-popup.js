@@ -20,7 +20,7 @@ const createFilmComment = ({id, text, emoji, commentator, commentTime}) => {
     ? dayjs(commentTime).fromNow()
     : '';
 
-  return `<li class="film-details__comment" data-id="${id}">
+  return `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
               <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
             </span>
@@ -29,7 +29,7 @@ const createFilmComment = ({id, text, emoji, commentator, commentTime}) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${commentator}</span>
                 <span class="film-details__comment-day">${date}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button class="film-details__comment-delete" data-id="${id}">Delete</button>
               </p>
             </div>
           </li>
@@ -189,21 +189,14 @@ export default class FilmPopup extends SmartView {
     );
   }
 
-  static parsDataToFilm(data) {
-    const film = Object.assign({}, data);
-
-    film.comments.unshift({ //Нужно новый коммент добавлять в начало или в конец массива?
+  static parsDataToComment(data) {
+    return {
       id: nanoid(),
       text: data.comment,
       emoji: `${data.emotion}.png`,
       commentator: null,
       commentTime: null,
-    });
-
-    delete film.comment;
-    delete film.emotion;
-
-    return film;
+    };
   }
 
   setCloseButtonHandler(callback) {
@@ -267,12 +260,12 @@ export default class FilmPopup extends SmartView {
   }
 
   _formSubmitHandler(evt) {
-    if (evt.ctrlKey && evt.key === 'Enter' || evt.metaKey && evt.key === 'Enter') {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
       if (!this._data.emotion || !this._data.comment) {
         return;
       }
       evt.preventDefault();
-      this._callback.submitHandler(FilmPopup.parsDataToFilm(this._data));
+      this._callback.submitHandler(FilmPopup.parsDataToComment(this._data));
     }
   }
 

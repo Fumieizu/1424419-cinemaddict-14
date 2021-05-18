@@ -1,4 +1,5 @@
-const ProfileRank = {
+export const ProfileRanks = {
+  UNRANKED: 'Unranked',
   NOVICE: 'Novice',
   FAN: 'Fan',
   MOVIE_BUFF: 'Movie Buff',
@@ -20,23 +21,21 @@ const MovieBuffCount = {
 
 const getProfileRank = (count) => {
   if (count === NoviceCount.MIN) {
-    return '';
+    return ProfileRanks.UNRANKED;
   }
   if (count > NoviceCount.MIN && count <= NoviceCount.MAX) {
-    return ProfileRank.NOVICE;
+    return ProfileRanks.NOVICE;
   }
   if (count > FanCount.MIN && count <= FanCount.MAX) {
-    return ProfileRank.FAN;
+    return ProfileRanks.FAN;
   }
   if (count > MovieBuffCount.MIN) {
-    return ProfileRank.MOVIE_BUFF;
+    return ProfileRanks.MOVIE_BUFF;
   }
 };
 
 export const generateProfileRank = (films) => {
-  const watchedFilmCount = films.filter((film) => film.isWatched).length;
+  const watchedFilmCount = films.filter((film) => film.isHistory).length;
 
   return getProfileRank(watchedFilmCount);
 };
-
-// Есть сомнения на счет 'качества' реализации, а так же на счет расположения данного кода(оставить его в моках?)
