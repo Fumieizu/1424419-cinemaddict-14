@@ -10,7 +10,7 @@ import {generateFilm} from './mock/film.js';
 import './mock/film.js';
 
 
-const FILM_COUNT = 5;
+const FILM_COUNT = 25;
 
 const films = new Array(FILM_COUNT).fill().map(generateFilm);
 
