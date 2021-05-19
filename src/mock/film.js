@@ -153,6 +153,7 @@ const generateCommentTime = () => {
 };
 
 export const generateComment = () => ({
+  id: nanoid(),
   text: generateFilmDescription(),
   emoji: getRandomIndexElement(EMOJIS),
   commentator: getRandomIndexElement(COMMENTATOR_NAMES),
