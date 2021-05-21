@@ -38,7 +38,7 @@ export default class SiteMenu extends AbstractView {
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener('click', this._filterTypeChangeHandler);
+    this.getElement().querySelector('.main-navigation__item').addEventListener('click', this._filterTypeChangeHandler);
   }
 
   setStatsClickHandler(callback) {

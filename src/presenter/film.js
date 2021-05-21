@@ -72,6 +72,7 @@ export default class film {
   destroy() {
     remove(this._filmComponent);
     remove(this._popupComponent);
+    document.removeEventListener('keydown', this._onEscKeyDownHandler);
   }
 
   resetView() {
