@@ -237,7 +237,7 @@ export default class FilmPopup extends SmartView {
     );
   }
 
-  restoreHandler() {
+  restoreHandlers() {
     this._setInnerHandler();
 
     this.setCloseButtonHandler(this._callback.closeButtonClick);

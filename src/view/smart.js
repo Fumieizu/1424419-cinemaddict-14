@@ -35,7 +35,7 @@ export default class Smart extends Abstract {
     parent.replaceChild(newElement, prevElement);
     newElement.scrollTop = this._scroll;
 
-    this.restoreHandler();
+    this.restoreHandlers();
   }
 
   restoreHandlers() {

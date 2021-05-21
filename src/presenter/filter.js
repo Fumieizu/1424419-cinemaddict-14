@@ -4,15 +4,18 @@ import {filter} from '../utils/filter.js';
 import {FilterType, UpdateType} from '../const.js';
 
 export default class Filter {
-  constructor(filterContainer, filterModel, filmsModel) {
+  constructor(filterContainer, filterModel, filmsModel, renderStatistic, renderSiteContent) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
+    this._renderStatistic = renderStatistic;
+    this._renderSiteContent = renderSiteContent;
 
     this._filterComponent = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._statsClickHandler = this._statsClickHandler.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -25,6 +28,7 @@ export default class Filter {
     this._filterComponent = new SiteMenuView(filter, this._filterModel.get());
 
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._filterComponent.setStatsClickHandler(this._statsClickHandler);
 
     if (prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
@@ -45,6 +49,11 @@ export default class Filter {
     }
 
     this._filterModel.set(UpdateType.MAJOR, filterType);
+    this._renderSiteContent();
+  }
+
+  _statsClickHandler() {
+    this._renderStatistic();
   }
 
   _getFilters() {
