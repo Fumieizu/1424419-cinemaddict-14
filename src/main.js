@@ -30,17 +30,17 @@ const siteFooter = document.querySelector('.footer');
 const profileRating = new ProfileRankPresenter(siteHeader,filmsModel);
 profileRating.init();
 
-const StatisticsPresenter = new StatisticPresenter(siteMain, filmsModel);
+const statisticsPresenter = new StatisticPresenter(siteMain, filmsModel);
 const boardPresenter = new FilmBoardPresenter(siteMain, siteBody, filmsModel, commentsModel, filterModel);
 
 
 const renderStatistic = () => {
   boardPresenter.hide();
-  StatisticsPresenter.init();
+  statisticsPresenter.init();
 };
 
 const renderSiteContent = () => {
-  StatisticsPresenter.destroy();
+  statisticsPresenter.destroy();
   boardPresenter.show();
 };
 const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, renderStatistic, renderSiteContent);

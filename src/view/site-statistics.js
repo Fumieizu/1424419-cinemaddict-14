@@ -68,29 +68,22 @@ const createChart = (statisticCtx, {genres, count}) => {
     });
 };
 
+const getHumanizedDurationStats = (totalTime) => {
+  const hours = Math.floor(totalTime / 60);
+  const minutes = totalTime % 60;
+  const hoursOutput = hours ? hours + '<span class="statistic__item-description">h</span> ' : '';
+
+  return hoursOutput + minutes + '<span class="statistic__item-description">m</span>';
+};
+
+const getTopGenre = (genres) => genres.length === 0 ? '' : genres[0];
+
 const createStatisticsTemplate = ({period, watchedFilms,  genres, profileRank}) => {
 
   const watchedFilmsTimeInMinutesCount = watchedFilms.reduce((accumulator, film) => {
 
-    return accumulator + (film.time.$d.hours * 60) + Number(film.time.$d.minutes);
+    return accumulator + film.time.asMinutes();
   }, 0);
-
-  const getHumanizedDurationStats = (totalTime) => {
-    const hours = Math.floor(totalTime / 60);
-    const minutes = totalTime % 60;
-    const hoursOutput = hours ? hours + '<span class="statistic__item-description">h</span> ' : '';
-
-    return hoursOutput + minutes + '<span class="statistic__item-description">m</span>';
-  };
-
-  const setTopGenre = (genres) => {
-    if (genres.length === 0) {
-      return '';
-    }
-
-    return genres[0];
-  };
-
 
   return `<section class="statistic">
     <p class="statistic__rank">
@@ -129,7 +122,7 @@ const createStatisticsTemplate = ({period, watchedFilms,  genres, profileRank}) 
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${setTopGenre(genres)}</p>
+        <p class="statistic__item-text">${getTopGenre(genres)}</p>
       </li>
     </ul>
 
@@ -141,10 +134,10 @@ const createStatisticsTemplate = ({period, watchedFilms,  genres, profileRank}) 
 };
 
 export default class Statistic extends SmartView {
-  constructor({period, watchedFilms, genresCount, genres, count, profileRank}) {
+  constructor(data) {
     super();
 
-    this._data = {period, watchedFilms, genresCount, genres, count, profileRank};
+    this._data = data;
 
     this._statisticFilterChangeHandler = this._statisticFilterChangeHandler.bind(this);
 

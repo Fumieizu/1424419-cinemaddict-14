@@ -148,13 +148,9 @@ const generateReleaseDate = () => {
 };
 
 const generateWatchingDate = () => {
-  const maxDaysGap = DaysGap.MAX;
-  const minDaysGap = DaysGap.MIN;
-  const daysGap = getRandomInteger(minDaysGap, maxDaysGap);
+  const daysGap = getRandomInteger(DaysGap.MIN, DaysGap.MAX);
 
-  const date = dayjs().add(daysGap, 'day').toDate();
-
-  return date;
+  return dayjs().add(daysGap, 'day').toDate();
 };
 
 //Comments

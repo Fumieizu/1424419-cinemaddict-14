@@ -44,10 +44,6 @@ export default class Filter {
   }
 
   _handleFilterTypeChange(filterType) {
-    if (this._filterModel.get() === filterType) {
-      return;
-    }
-
     this._filterModel.set(UpdateType.MAJOR, filterType);
     this._renderSiteContent();
   }
