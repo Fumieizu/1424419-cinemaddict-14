@@ -102,6 +102,11 @@ const CommentsCount = {
   MAX: 5,
 };
 
+const DaysGap = {
+  MIN: 360,
+  MAX: 0,
+};
+
 const MAX_SENTENCE_COUNT = 5;
 
 const RELEASE_DATE_MAX_DAYS_GAP = 1000;
@@ -138,6 +143,12 @@ const generateFilmTime = () => {
 const generateReleaseDate = () => {
   const maxDaysGap = RELEASE_DATE_MAX_DAYS_GAP;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+
+  return dayjs().add(daysGap, 'day').toDate();
+};
+
+const generateWatchingDate = () => {
+  const daysGap = getRandomInteger(DaysGap.MIN, DaysGap.MAX);
 
   return dayjs().add(daysGap, 'day').toDate();
 };
@@ -180,4 +191,5 @@ export const generateFilm = () => ({
   isFavorites: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
   isWatched: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
   isHistory: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
+  watchingDate: generateWatchingDate(),
 });

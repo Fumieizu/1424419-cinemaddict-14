@@ -29,6 +29,7 @@ export default class SiteMenu extends AbstractView {
     this._filters = filters;
     this._currentFilter = currentFilterType;
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._statsClickHandler = this._statsClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -37,11 +38,40 @@ export default class SiteMenu extends AbstractView {
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener('click', this._filterTypeChangeHandler);
+    this.getElement().querySelectorAll('.main-navigation__item')
+      .forEach((filter) =>filter.addEventListener('click', this._filterTypeChangeHandler));
+  }
+
+  setStatsClickHandler(callback) {
+    this._callback.statsClick = callback;
+    this.getElement().querySelector('.main-navigation__additional')
+      .addEventListener('click', this._statsClickHandler);
   }
 
   _filterTypeChangeHandler(evt) {
+    if (this._currentFilter === evt.target.dataset.filter) {
+      return;
+    }
+
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.dataset.filter);
+  }
+
+  _statsClickHandler(evt) {
+    const statClick = this.getElement().querySelector('.main-navigation__additional');
+
+    evt.preventDefault();
+
+    if (statClick.classList.contains('main-navigation__item--active')) {
+      return;
+    }
+
+    this.getElement().querySelector('.main-navigation__item--active').classList.remove('main-navigation__item--active');
+
+    this._currentFilter = null;
+
+    statClick.classList.add('main-navigation__item--active');
+
+    this._callback.statsClick();
   }
 }

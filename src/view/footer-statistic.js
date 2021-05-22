@@ -1,6 +1,6 @@
 import AbstractView from './abstract.js';
 
-export default class SiteStatistic extends AbstractView {
+export default class FooterStatistic extends AbstractView {
   constructor(count) {
     super();
     this._count = count;

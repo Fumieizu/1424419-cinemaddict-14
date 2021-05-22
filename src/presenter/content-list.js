@@ -36,6 +36,11 @@ export default class FilmBoard {
 
     this._currentSortType = SortType.DEFAULT;
 
+    this._filmContainer = this._siteContainer.getFilmListAllMovies().querySelector('.films-list__container');
+    this._filmListTopRatedContainer = this._siteContainer.getFilmListTopRated().querySelector('.films-list__container');
+    this._filmListMostCommentedContainer = this._siteContainer.getFilmListMostCommented().querySelector('.films-list__container');
+
+
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
@@ -52,18 +57,27 @@ export default class FilmBoard {
     this._renderFilmBoard();
   }
 
-  _get() {
+  show() {
+    this._siteContainer.show();
+  }
+
+  hide() {
+    this._sort.hide();
+    this._siteContainer.hide();
+  }
+
+  _getFilms() {
     const filterType = this._filterModel.get();
     const films = this._filmsModel.get();
-    const filtredFilms = filter[filterType](films);
+    const filteredFilms = filter[filterType](films);
 
     switch (this._currentSortType) {
       case SortType.BY_RATING:
-        return filtredFilms.slice().sort(sortByRating);
+        return filteredFilms.slice().sort(sortByRating);
       case SortType.BY_DATE:
-        return filtredFilms.slice().sort(sortByDate);
+        return filteredFilms.slice().sort(sortByDate);
     }
-    return filtredFilms;
+    return filteredFilms;
   }
 
   _handleFilmChange(updatedFilm) {
@@ -124,7 +138,7 @@ export default class FilmBoard {
   }
 
   _renderFilmBoard() {
-    if (this._get().length === 0) {
+    if (this._getFilms().length === 0) {
       return this._renderNoFilm();
     }
 
@@ -181,9 +195,9 @@ export default class FilmBoard {
   }
 
   _handleShowMoreButtonClick() {
-    const filmCount = this._get().length;
+    const filmCount = this._getFilms().length;
     const newRenderedFilmCount = Math.min(filmCount, this._renderedFilmCount + FILM_COUNT_PER_STEP);
-    const films = this._get().slice(this._renderedFilmCount, newRenderedFilmCount);
+    const films = this._getFilms().slice(this._renderedFilmCount, newRenderedFilmCount);
 
     this._renderFilms(this._filmContainer, films);
     this._renderedFilmCount = newRenderedFilmCount;
@@ -206,7 +220,7 @@ export default class FilmBoard {
   }
 
   _clearFilmList({resetRenderedFilmCount = false, resetSortType = false} = {}) {
-    const filmCount = this._get().length;
+    const filmCount = this._getFilms().length;
 
     Object.values(this._filmPresenters).forEach((store) => {
       Object.values(store).forEach((presenter) => {
@@ -233,10 +247,9 @@ export default class FilmBoard {
   }
 
   _renderAllFilms() {
-    const filmsCount = this._get().length;
-    const films = this._get().slice(0, Math.min(filmsCount, this._renderedFilmCount));
+    const filmsCount = this._getFilms().length;
+    const films = this._getFilms().slice(0, Math.min(filmsCount, this._renderedFilmCount));
 
-    this._filmContainer = this._siteContainer.getFilmListAllMovies().querySelector('.films-list__container');
     this._renderFilms(this._filmContainer,  films);
 
     if (filmsCount > this._renderedFilmCount) {
@@ -245,23 +258,23 @@ export default class FilmBoard {
   }
 
   _renderTopRatedFilm() {
-    const filmsCount = this._get().length;
-    const ratedFilm = this._get().slice().sort((a, b) => b.rating - a.rating);
+    const films = this._filmsModel.get();
+    const filmsCount = films.length;
+    const ratedFilm = films.slice().sort((a, b) => b.rating - a.rating);
 
     const film = ratedFilm.slice(0, Math.min(filmsCount, EXTRA_FILMS_COUNT));
 
-    this._filmListTopRatedContainer = this._siteContainer.getFilmListTopRated().querySelector('.films-list__container');
 
     this._renderFilms(this._filmListTopRatedContainer, film);
   }
 
   _renderMostCommented() {
-    const filmsCount = this._get().length;
-    const mostCommented = this._get().slice().sort((a, b) => b.comments.length - a.comments.length);
+    const films = this._filmsModel.get();
+    const filmsCount = films.length;
+    const mostCommented = films.slice().sort((a, b) => b.comments.length - a.comments.length);
 
     const film = mostCommented.slice(0, Math.min(filmsCount, EXTRA_FILMS_COUNT));
 
-    this._filmListMostCommentedContainer = this._siteContainer.getFilmListMostCommented().querySelector('.films-list__container');
 
     this._renderFilms(this._filmListMostCommentedContainer, film);
   }
