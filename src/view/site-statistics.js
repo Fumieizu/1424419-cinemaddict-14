@@ -82,7 +82,7 @@ const createStatisticsTemplate = ({period, watchedFilms,  genres, profileRank}) 
 
   const watchedFilmsTimeInMinutesCount = watchedFilms.reduce((accumulator, film) => {
 
-    return accumulator + film.time.asMinutes();
+    return accumulator + film.time;
   }, 0);
 
   return `<section class="statistic">

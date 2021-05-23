@@ -186,7 +186,6 @@ export const generateFilm = () => ({
   country: getRandomIndexElement(COUNTRIES),
   ageRate: getRandomIndexElement(AGE_RATES),
   genre: getRandomArrayLength(GENRES),
-  mainGenre: getRandomIndexElement(GENRES),
   comments: new Array(getRandomInteger(CommentsCount.MIN, CommentsCount.MAX)).fill().map(generateComment),
   isFavorites: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),
   isWatched: Boolean(getRandomInteger(BooleanFlag.FALSE, BooleanFlag.TRUE)),

@@ -9,13 +9,14 @@ const Mode = {
 };
 
 export default class film {
-  constructor(filmContainer, popupContainer, changeData, changeMode, commentsModel, onPopupOpen) {
+  constructor(filmContainer, popupContainer, changeData, changeMode, commentsModel, onPopupOpen, api) {
     this._filmContainer = filmContainer;
     this._popupContainer = popupContainer;
     this._changeData = changeData;
     this._changeMode = changeMode;
     this._commentsModel = commentsModel;
     this._onPopupOpen = onPopupOpen;
+    this._api = api;
 
     this._film = null;
     this._filmComponent = null;
@@ -30,6 +31,7 @@ export default class film {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this.showPopup = this.showPopup.bind(this);
     this._onEscKeyDownHandler = this._onEscKeyDownHandler.bind(this);
+    this._handleFilmCardClick = this._handleFilmCardClick.bind(this);
   }
 
   init(film) {
@@ -37,10 +39,10 @@ export default class film {
     const prevFilmComponent = this._filmComponent;
     const prevPopupComponent = this._popupComponent;
     this._filmComponent = new FilmTemplateView(film);
-    this._popupComponent = new FilmPopupView(film, this._commentsModel.getComments());
+    this._popupComponent = new FilmPopupView(film, this._commentsModel.get());
 
 
-    this._filmComponent.setPopupClickHandler(this.showPopup);
+    this._filmComponent.setPopupClickHandler(this._handleFilmCardClick);
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteListClick);
     this._filmComponent.setHistoryClickHandler(this._handleWatchListClick);
     this._filmComponent.setWatchedClickHandler(this._handleWatchedListClick);
@@ -68,6 +70,12 @@ export default class film {
     remove(prevFilmComponent);
     remove(prevPopupComponent);
   }
+
+  /*_getComments() {
+    const filteredCommentsById = this._commentsModel.get().filter((comment) => this._film.comments.includes(comment.id));
+
+    return filteredCommentsById;
+  }*/
 
   destroy() {
     remove(this._filmComponent);
@@ -118,6 +126,18 @@ export default class film {
       this._removePopup();
       document.removeEventListener('keydown', this._onEscKeyDownHandler);
     }
+  }
+
+  _handleFilmCardClick() {
+    this._api.getComments(this._film.id)
+      .then((comments) => {
+        this._commentsModel.set(UpdateType.INIT, comments);
+        this.showPopup();
+      })
+      .catch(() => {
+        this._commentsModel.set(UpdateType.INIT, []);
+        this.showPopup();
+      });
   }
 
   _handleCommentDeleteClick(commentId) {

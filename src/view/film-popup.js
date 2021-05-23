@@ -2,8 +2,9 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import SmartView from './smart';
-import he from 'he';
+// import he from 'he';
 import {nanoid} from 'nanoid';
+import {getHumanizedDuration} from '../utils/film.js';
 
 const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
 
@@ -25,7 +26,7 @@ const createFilmComment = ({id, text, emoji, commentator, commentTime}) => {
               <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
-              <p class="film-details__comment-text">${he.encode(text)}</p>
+              <p class="film-details__comment-text">${text}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${commentator}</span>
                 <span class="film-details__comment-day">${date}</span>
@@ -46,7 +47,6 @@ const createEmojiList = (emotion) => {
 const createFilmPopup = ({poster, title, originalName, emotion, comment, comments, rating, director, description, year, time, writers, ageRate, actor, genre, country, isFavorites, isWatched, isHistory}) => {
 
   const commentFilm = comments.map(createFilmComment).join('');
-  const {hours, minutes} = time.$d;
 
   const date = year!== null
     ? dayjs(year).format('DD MMMM YYYY')
@@ -71,7 +71,7 @@ const createFilmPopup = ({poster, title, originalName, emotion, comment, comment
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+          <img class="film-details__poster-img" src="${poster}" alt="">
 
           <p class="film-details__age">${ageRate}</p>
         </div>
@@ -107,7 +107,7 @@ const createFilmPopup = ({poster, title, originalName, emotion, comment, comment
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${hours}h ${minutes}m</td>
+              <td class="film-details__cell">${getHumanizedDuration(time)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
@@ -147,7 +147,7 @@ const createFilmPopup = ({poster, title, originalName, emotion, comment, comment
           <div class="film-details__add-emoji-label">${!emotion ? '' : `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">`}</div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(comment)}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${comment}</textarea>
           </label>
 
           <div class="film-details__emoji-list">${createEmojiList(emotion)}</div>
@@ -159,9 +159,9 @@ const createFilmPopup = ({poster, title, originalName, emotion, comment, comment
 };
 
 export default class FilmPopup extends SmartView {
-  constructor(film) {
+  constructor(film, comments) {
     super();
-    this._data = FilmPopup.parsFilmToData(film);
+    this._data = FilmPopup.parsFilmToData(film, comments);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._historyClickHandler = this._historyClickHandler.bind(this);
@@ -175,7 +175,7 @@ export default class FilmPopup extends SmartView {
   }
 
   getTemplate() {
-    return createFilmPopup(this._data/*, this._comment*/);
+    return createFilmPopup(this._data);
   }
 
   static parsFilmToData(film) {

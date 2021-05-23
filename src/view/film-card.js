@@ -1,13 +1,7 @@
-import dayjs from 'dayjs';
 import AbstractView from './abstract.js';
+import {getHumanizedDuration, getFilmCardDate} from '../utils/film';
 
-const createFilmTemplate = ({poster, title, rating, year, time, mainGenre, description, comments, isFavorites, isWatched, isHistory}) => {
-
-  const {hours, minutes} = time.$d;
-
-  const date = year !== null
-    ? dayjs(year).format('YYYY')
-    : '';
+const createFilmTemplate = ({poster, title, rating, year, time, genre, description, comments, isFavorites, isWatched, isHistory}) => {
 
   const descriptionLimitValidation = (text, limit) => {
 
@@ -16,6 +10,7 @@ const createFilmTemplate = ({poster, title, rating, year, time, mainGenre, descr
     }
     return text.slice(0, limit - 1) + '...';
   };
+
 
   const descriptionLimit = descriptionLimitValidation(description, 140);
 
@@ -29,11 +24,11 @@ const createFilmTemplate = ({poster, title, rating, year, time, mainGenre, descr
           <h3 class="film-card__title film-card__popup-open">${title}</h3>
           <p class="film-card__rating">${rating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${date}</span>
-            <span class="film-card__duration">${hours}h ${minutes}m</span>
-            <span class="film-card__genre">${mainGenre}</span>
+            <span class="film-card__year">${getFilmCardDate(year)}</span>
+            <span class="film-card__duration">${getHumanizedDuration(time)}</span>
+            <span class="film-card__genre">${genre[0]}</span>
           </p>
-          <img src="./images/posters/${poster}" alt="" class="film-card__poster film-card__popup-open">
+          <img src="${poster}" alt="" class="film-card__poster film-card__popup-open">
           <p class="film-card__description">${descriptionLimit}</p>
           <a class="film-card__comments film-card__popup-open">${comments.length} comments</a>
           <div class="film-card__controls">
