@@ -39,7 +39,7 @@ export default class film {
     const prevFilmComponent = this._filmComponent;
     const prevPopupComponent = this._popupComponent;
     this._filmComponent = new FilmTemplateView(film);
-    this._popupComponent = new FilmPopupView(film, this._commentsModel.get());
+    this._popupComponent = new FilmPopupView(film, this._commentsModel);
 
 
     this._filmComponent.setPopupClickHandler(this._handleFilmCardClick);
@@ -70,12 +70,6 @@ export default class film {
     remove(prevFilmComponent);
     remove(prevPopupComponent);
   }
-
-  /*_getComments() {
-    const filteredCommentsById = this._commentsModel.get().filter((comment) => this._film.comments.includes(comment.id));
-
-    return filteredCommentsById;
-  }*/
 
   destroy() {
     remove(this._filmComponent);
@@ -114,7 +108,7 @@ export default class film {
   }
 
   _handleCloseButtonClick() {
-    this._popupComponent.reset(this._film);
+    this._popupComponent.reset(this._film, this._commentsModel);
     this._removePopup();
     document.removeEventListener('keydown', this._onEscKeyDownHandler);
   }
@@ -122,7 +116,7 @@ export default class film {
   _onEscKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this._popupComponent.reset(this._film);
+      this._popupComponent.reset(this._film, this._commentsModel);
       this._removePopup();
       document.removeEventListener('keydown', this._onEscKeyDownHandler);
     }
@@ -133,6 +127,7 @@ export default class film {
       .then((comments) => {
         this._commentsModel.set(UpdateType.INIT, comments);
         this.showPopup();
+        this._popupComponent.reset(this._film, this._commentsModel);
       })
       .catch(() => {
         this._commentsModel.set(UpdateType.INIT, []);

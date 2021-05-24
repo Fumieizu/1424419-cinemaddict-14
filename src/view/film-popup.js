@@ -4,7 +4,7 @@ dayjs.extend(relativeTime);
 import SmartView from './smart';
 // import he from 'he';
 import {nanoid} from 'nanoid';
-import {getHumanizedDuration} from '../utils/film.js';
+import {getHumanizedDuration, getDateFromNow} from '../utils/film.js';
 
 const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
 
@@ -14,27 +14,21 @@ const createGenres = (genre) => {
     `).join(' ');
 };
 
-
-const createFilmComment = ({id, text, emoji, commentator, commentTime}) => {
-
-  const date = commentTime !== null
-    ? dayjs(commentTime).fromNow()
-    : '';
-
-  return `<li class="film-details__comment">
+const createFilmComment = (comments) => {
+  return Object.values(comments).map(({id, text, emoji, commentator, commentTime}) => `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
+              <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
               <p class="film-details__comment-text">${text}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${commentator}</span>
-                <span class="film-details__comment-day">${date}</span>
+                <span class="film-details__comment-day">${getDateFromNow(commentTime)}</span>
                 <button class="film-details__comment-delete" data-id="${id}">Delete</button>
               </p>
             </div>
           </li>
-    `;
+    `).join('');
 };
 
 const createEmojiList = (emotion) => {
@@ -44,9 +38,9 @@ const createEmojiList = (emotion) => {
             </label>`).join('');
 };
 
-const createFilmPopup = ({poster, title, originalName, emotion, comment, comments, rating, director, description, year, time, writers, ageRate, actor, genre, country, isFavorites, isWatched, isHistory}) => {
+const createFilmPopup = ({poster, title, originalName, emotion, isComments, comment, comments, rating, director, description, year, time, writers, ageRate, actor, genre, country, isFavorites, isWatched, isHistory}) => {
 
-  const commentFilm = comments.map(createFilmComment).join('');
+  const commentFilm = createFilmComment(isComments);
 
   const date = year!== null
     ? dayjs(year).format('DD MMMM YYYY')
@@ -178,11 +172,12 @@ export default class FilmPopup extends SmartView {
     return createFilmPopup(this._data);
   }
 
-  static parsFilmToData(film) {
+  static parsFilmToData(film, comments) {
     return Object.assign(
       {},
       film,
       {
+        isComments: comments.get().filter((comment) => film.comments.includes(comment.id)),
         emotion: null,
         comment: '',
       },
@@ -231,9 +226,9 @@ export default class FilmPopup extends SmartView {
   }
 
 
-  reset(film) {
+  reset(film, comments) {
     this.updateData(
-      FilmPopup.parsFilmToData(film),
+      FilmPopup.parsFilmToData(film, comments),
     );
   }
 

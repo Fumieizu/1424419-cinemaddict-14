@@ -12,6 +12,10 @@ export const getFilmCardDate = (date) => {
   return dayjs(date).format('YYYY');
 };
 
+export const getDateFromNow = (date) => {
+  return dayjs(date).fromNow();
+};
+
 export const getHumanizedDuration = (minutesTotal) => {
   const hours = Math.floor(minutesTotal / 60);
   const minutes = minutesTotal % 60;

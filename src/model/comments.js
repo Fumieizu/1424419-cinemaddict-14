@@ -52,6 +52,11 @@ export default class Comments extends Observer {
       },
     );
 
+    delete adaptedComment.comment;
+    delete adaptedComment.emotion;
+    delete adaptedComment.author;
+    delete adaptedComment.date;
+
     return adaptedComment;
   }
 }
