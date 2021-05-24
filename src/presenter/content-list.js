@@ -6,8 +6,7 @@ import LoadingView from '../view/loading.js';
 import FilmPresenter from './film.js';
 import {RenderPosition, render, remove} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
-// import {updateItem} from '../utils/common.js';
-import {SortType, UpdateType, UserAction} from '../const.js';
+import {SortType, UpdateType, UserAction, State} from '../const.js';
 import {sortByDate, sortByRating} from '../utils/film.js';
 
 const FILM_COUNT_PER_STEP = 5;
@@ -95,13 +94,32 @@ export default class FilmBoard {
       });
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, update, comments) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._api.updateFilm(update).then((response) => {
           this._filmsModel.update(updateType, response);
         });
         break;
+      case UserAction.ADD_COMMENT:
+        this._filmPresenters.allFilmsList[update.id].setViewState(State.SAVING, comments);
+        // this._filmPresenters.topRatingList[update.id].setViewState(State.SAVING, comments);
+        // this._filmPresenters.mostCommentList[update.id].setViewState(State.SAVING, comments);
+        this._api.addComment(update, comments).then((response) => {
+          this._commentsModel.add(updateType, response.film, response.comments);
+          this._filmsModel.update(updateType, response.film);
+        });
+        // .catch(() =>)?
+        break;
+      case UserAction.DELETE_COMMENT:
+        this._filmPresenters.allFilmsList[update.id].setViewState(State.DELETING, comments);
+        // this._filmPresenters.topRatingList[update.id].setViewState(State.DELETING, comments);
+        // this._filmPresenters.mostCommentList[update.id].setViewState(State.DELETING, comments);
+        this._api.deleteComment(comments).then(() =>{
+          this._commentsModel.delete(updateType, comments);
+          this._filmsModel.update(updateType, update);
+        });
+          // .catch(() =>)?
     }
   }
 

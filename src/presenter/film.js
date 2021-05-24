@@ -1,6 +1,6 @@
 import FilmTemplateView from '../view/film-card.js';
 import FilmPopupView from '../view/film-popup.js';
-import {UserAction, UpdateType} from '../const.js';
+import {UserAction, UpdateType, State} from '../const.js';
 import {RenderPosition, render, remove, replace} from '../utils/render.js';
 
 const Mode = {
@@ -89,6 +89,32 @@ export default class film {
     this._popupComponent.getElement().scrollTop = scroll;
   }
 
+  setViewState(state) {
+    const resetFormState = () => {
+      this._popupComponent.updateData({
+        isDisabled: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._popupComponent.updateData({
+          isDisabled: true,
+        });
+        break;
+      case State.DELETING:
+        this._popupComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._popupComponent.shake(resetFormState);
+        break;
+    }
+  }
+
   _renderPopup() {
     this._popupContainer.classList.add('hide-overflow');
     render(this._popupContainer, this._popupComponent, RenderPosition.BEFOREEND);
@@ -143,7 +169,7 @@ export default class film {
     const newComments = this._film.comments.filter((comment) => comment.id !== commentId);
 
     this._changeData(
-      UserAction.UPDATE_FILM,
+      UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       Object.assign(
         {},
@@ -152,6 +178,7 @@ export default class film {
           comments: newComments,
         },
       ),
+      commentId,
     );
   }
 
@@ -210,25 +237,15 @@ export default class film {
   }
 
   _handleFormSubmit(newComment) {
-    const newComments = [
-      ...this._film.comments,
-      newComment,
-    ];
-
     this._onPopupOpen({
       scrollPosition: this._popupComponent.getElement().scrollTop,
     });
 
     this._changeData(
-      UserAction.UPDATE_FILM,
+      UserAction.ADD_COMMENT,
       UpdateType.MINOR,
-      Object.assign(
-        {},
-        this._film,
-        {
-          comments: newComments,
-        },
-      ),
+      this._film,
+      newComment,
     );
   }
 }

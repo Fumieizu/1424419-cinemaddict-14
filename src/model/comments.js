@@ -16,7 +16,7 @@ export default class Comments extends Observer {
     return this._comments;
   }
 
-  /*  add(updateType, update) {
+  add(updateType, update) {
     this._comments = [
       update,
       ...this._comments,
@@ -26,19 +26,15 @@ export default class Comments extends Observer {
   }
 
   delete(updateType, update) {
-    const index = this._comments.findIndex((comment) => comment.id === update.id);
+    const count = this._comments.length;
+    this._comments = this._comments.filter((comment) => comment.id !== update);
 
-    if (index === -1) {
-      throw new Error('Can\'t delete unexisting comments');
+    if (count === this._comments.length) {
+      throw new Error('Can\'t delete unexisting comment');
     }
 
-    this._comments = [
-      ...this._comments.slice(0, index),
-      ...this._comments.slice(index + 1),
-    ];
-
     this._notify(updateType);
-  }*/
+  }
 
   static adaptToClient(comment) {
     const adaptedComment = Object.assign(
@@ -56,6 +52,26 @@ export default class Comments extends Observer {
     delete adaptedComment.emotion;
     delete adaptedComment.author;
     delete adaptedComment.date;
+
+    return adaptedComment;
+  }
+
+  static adaptToServer(comment) {
+    const adaptedComment = Object.assign(
+      {},
+      comment,
+      {
+        'author': comment.commentator,
+        'comment': comment.text,
+        'date': comment.commentTime,
+        'emotion': comment.emoji,
+      },
+    );
+
+    delete adaptedComment.commentator;
+    delete adaptedComment.text;
+    delete adaptedComment.commentTime;
+    delete adaptedComment.emoji;
 
     return adaptedComment;
   }

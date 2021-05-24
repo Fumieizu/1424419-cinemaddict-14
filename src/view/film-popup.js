@@ -14,7 +14,7 @@ const createGenres = (genre) => {
     `).join(' ');
 };
 
-const createFilmComment = (comments) => {
+const createFilmComment = (comments, isDeleting) => {
   return Object.values(comments).map(({id, text, emoji, commentator, commentTime}) => `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
               <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
@@ -24,23 +24,23 @@ const createFilmComment = (comments) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${commentator}</span>
                 <span class="film-details__comment-day">${getDateFromNow(commentTime)}</span>
-                <button class="film-details__comment-delete" data-id="${id}">Delete</button>
+                <button class="film-details__comment-delete" data-id="${id}">${isDeleting ? 'Deleting...' : 'Delete'}</button>
               </p>
             </div>
           </li>
     `).join('');
 };
 
-const createEmojiList = (emotion) => {
-  return EMOJIS.map((emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value=${emoji} ${emotion === emoji ? 'checked' : ''}>
+const createEmojiList = (emotion, isDisabled) => {
+  return EMOJIS.map((emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value=${emoji} ${emotion === emoji ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
             <label class="film-details__emoji-label" for="emoji-${emoji}">
               <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
             </label>`).join('');
 };
 
-const createFilmPopup = ({poster, title, originalName, emotion, isComments, comment, comments, rating, director, description, year, time, writers, ageRate, actor, genre, country, isFavorites, isWatched, isHistory}) => {
+const createFilmPopup = ({poster, title, originalName, emotion, isDeleting, isDisabled, isComments, comment, comments, rating, director, description, year, time, writers, ageRate, actor, genre, country, isFavorites, isWatched, isHistory}) => {
 
-  const commentFilm = createFilmComment(isComments);
+  const commentFilm = createFilmComment(isComments, isDeleting);
 
   const date = year!== null
     ? dayjs(year).format('DD MMMM YYYY')
@@ -61,7 +61,7 @@ const createFilmPopup = ({poster, title, originalName, emotion, isComments, comm
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
-        <button class="film-details__close-btn" type="button">close</button>
+        <button class="film-details__close-btn" type="button" ${isDisabled ? 'disabled' : ''}>close</button>
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
@@ -178,6 +178,8 @@ export default class FilmPopup extends SmartView {
       film,
       {
         isComments: comments.get().filter((comment) => film.comments.includes(comment.id)),
+        isDeleting: false,
+        isDisabled: false,
         emotion: null,
         comment: '',
       },
@@ -188,7 +190,7 @@ export default class FilmPopup extends SmartView {
     return {
       id: nanoid(),
       text: data.comment,
-      emoji: `${data.emotion}.png`,
+      emoji: data.emotion,
       commentator: null,
       commentTime: null,
     };
