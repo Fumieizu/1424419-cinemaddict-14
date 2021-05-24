@@ -5,18 +5,22 @@ import StatisticPresenter from './presenter/statistic.js';
 import FilmsModel from './model/films.js';
 import CommentsModel from './model/comments.js';
 import FilterModel from './model/filter';
+import {UpdateType} from './const.js';
 import FooterStatistic from './view/footer-statistic.js';
 import {RenderPosition, render} from './utils/render';
-import {generateFilm} from './mock/film.js';
-import './mock/film.js';
+import Api from './api.js';
 import './utils/statistic.js';
 
-const FILM_COUNT = 25;
 
-const films = new Array(FILM_COUNT).fill().map(generateFilm);
+const AUTHORIZATION = 'Basic Wqp1I24pIOl20';
+const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
+
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
 
 const filmsModel = new FilmsModel();
-filmsModel.set(films);
+
 
 const commentsModel = new CommentsModel();
 
@@ -27,11 +31,9 @@ const siteHeader = document.querySelector('.header');
 const siteMain = document.querySelector('.main');
 const siteFooter = document.querySelector('.footer');
 
-const profileRating = new ProfileRankPresenter(siteHeader,filmsModel);
-profileRating.init();
 
 const statisticsPresenter = new StatisticPresenter(siteMain, filmsModel);
-const boardPresenter = new FilmBoardPresenter(siteMain, siteBody, filmsModel, commentsModel, filterModel);
+const boardPresenter = new FilmBoardPresenter(siteMain, siteBody, filmsModel, commentsModel, filterModel, api);
 
 
 const renderStatistic = () => {
@@ -43,9 +45,19 @@ const renderSiteContent = () => {
   statisticsPresenter.destroy();
   boardPresenter.show();
 };
-const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, renderStatistic, renderSiteContent);
 
-filterPresenter.init();
 boardPresenter.init();
 
-render(siteFooter, new FooterStatistic(FILM_COUNT), RenderPosition.BEFOREEND);
+api.getFilms()
+  .then((films) => {
+    filmsModel.set(UpdateType.INIT, films);
+    new ProfileRankPresenter(siteHeader,filmsModel).init();
+  })
+  .catch(() => {
+    filmsModel.set(UpdateType.INIT, []);
+  })
+  .finally(() => {
+    new FilterPresenter(siteMain, filterModel, filmsModel, renderStatistic, renderSiteContent).init();
+    render(siteFooter, new FooterStatistic(filmsModel.get().length), RenderPosition.BEFOREEND);
+  });
+

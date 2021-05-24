@@ -2,6 +2,7 @@ import SortView from '../view/sort.js';
 import SiteContainerView from '../view/site-content-container.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
 import NoFilmView from '../view/no-film.js';
+import LoadingView from '../view/loading.js';
 import FilmPresenter from './film.js';
 import {RenderPosition, render, remove} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
@@ -14,7 +15,8 @@ const EXTRA_FILMS_COUNT = 2;
 
 
 export default class FilmBoard {
-  constructor(boardContainer, siteBody, filmsModel, commentsModel, filterModel) {
+  constructor(boardContainer, siteBody, filmsModel, commentsModel, filterModel, api) {
+    this._api = api;
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
     this._filterModel = filterModel;
@@ -27,12 +29,15 @@ export default class FilmBoard {
       mostCommentList: {},
     };
 
+    this._isLoading = true;
+
     this._activePopupState = null;
 
     this._siteContainer = new SiteContainerView();
     this._sort = null;
     this._noFilm = new NoFilmView();
     this._showMoreButton = null;
+    this._loadingComponent = new LoadingView();
 
     this._currentSortType = SortType.DEFAULT;
 
@@ -93,7 +98,9 @@ export default class FilmBoard {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._filmsModel.update(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._filmsModel.update(updateType, response);
+        });
         break;
     }
   }
@@ -117,6 +124,11 @@ export default class FilmBoard {
         this._clearFilmList({resetRenderedFilmCount: true, resetSortType: true});
         this._renderFilmBoard();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderFilmBoard();
+        break;
     }
   }
 
@@ -137,7 +149,17 @@ export default class FilmBoard {
     this._renderFilmBoard();
   }
 
+  _renderLoading() {
+    render(this._boardContainer, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   _renderFilmBoard() {
+    if (this._isLoading) {
+      this._renderLoading();
+
+      return;
+    }
+
     if (this._getFilms().length === 0) {
       return this._renderNoFilm();
     }
@@ -150,7 +172,7 @@ export default class FilmBoard {
   }
 
   _renderFilm(container, film) {
-    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel, this._setActivePopupState);
+    const filmPresenter = new FilmPresenter(container, this._siteBody, this._handleViewAction, this._handleModeChange, this._commentsModel, this._setActivePopupState, this._api);
     filmPresenter.init(film);
 
     if (this._activePopupState !==null && film.id === this._activePopupState.id) {
