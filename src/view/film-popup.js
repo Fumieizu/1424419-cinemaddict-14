@@ -187,13 +187,13 @@ export default class FilmPopup extends SmartView {
   }
 
   static parsDataToComment(data) {
-    return {
-      id: null,
-      text: data.comment,
-      emoji: data.emotion,
-      commentator: null,
-      commentTime: null,
-    };
+    delete data.comment;
+    delete data.emotion;
+    delete data.isComments;
+    delete data.isDisabled;
+    delete data.isDeleting;
+
+    return Object.assign({}, data);
   }
 
   setCloseButtonHandler(callback) {
@@ -270,8 +270,20 @@ export default class FilmPopup extends SmartView {
       if (!this._data.emotion || !this._data.comment) {
         return;
       }
+
+      const newComment = {
+        text: this._data.comment,
+        emoji: this._data.emotion,
+      };
+
       evt.preventDefault();
-      this._callback.submitHandler(FilmPopup.parsDataToComment(this._data));
+
+      this._callback.submitHandler(FilmPopup.parsDataToComment(newComment));
+
+      this.updateData({
+        comment: null,
+        emotion: null,
+      });
     }
   }
 

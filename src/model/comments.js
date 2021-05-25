@@ -16,10 +16,10 @@ export default class Comments extends Observer {
     return this._comments;
   }
 
-  add(updateType, update) {
+  add(updateType, update, comment) {
     this._comments = [
       ...this._comments,
-      update,
+      comment,
     ];
 
     this._notify(updateType, update);
