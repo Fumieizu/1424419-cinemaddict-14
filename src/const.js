@@ -35,5 +35,6 @@ export const DatePeriod = {
 export const State = {
   SAVING: 'SAVING',
   DELETING: 'DELETING',
-  ABORTING: 'ABORTING',
+  ABORTING_SAVING: 'ABORTING_SAVING',
+  ABORTING_DELETING: 'ABORTING_DELETING',
 };

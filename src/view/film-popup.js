@@ -3,10 +3,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import SmartView from './smart';
 // import he from 'he';
-import {nanoid} from 'nanoid';
 import {getHumanizedDuration, getDateFromNow} from '../utils/film.js';
 
 const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 const createGenres = (genre) => {
   return genre.map((it) =>`
@@ -24,7 +24,7 @@ const createFilmComment = (comments, isDeleting) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${commentator}</span>
                 <span class="film-details__comment-day">${getDateFromNow(commentTime)}</span>
-                <button class="film-details__comment-delete" data-id="${id}">${isDeleting ? 'Deleting...' : 'Delete'}</button>
+                <button class="film-details__comment-delete" data-id="${id}" ${isDeleting ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
               </p>
             </div>
           </li>
@@ -58,7 +58,7 @@ const createFilmPopup = ({poster, title, originalName, emotion, isDeleting, isDi
 
 
   return `<section class="film-details">
-  <form class="film-details__inner" action="" method="get">
+  <form class="film-details__inner" action="" method="get" ${isDisabled ? 'disabled' : ''}>
     <div class="film-details__top-container">
       <div class="film-details__close">
         <button class="film-details__close-btn" type="button" ${isDisabled ? 'disabled' : ''}>close</button>
@@ -177,7 +177,7 @@ export default class FilmPopup extends SmartView {
       {},
       film,
       {
-        isComments: comments.get().filter((comment) => film.comments.includes(comment.id)),
+        isComments: comments.get(),
         isDeleting: false,
         isDisabled: false,
         emotion: null,
@@ -188,7 +188,7 @@ export default class FilmPopup extends SmartView {
 
   static parsDataToComment(data) {
     return {
-      id: nanoid(),
+      id: null,
       text: data.comment,
       emoji: data.emotion,
       commentator: null,
@@ -243,6 +243,15 @@ export default class FilmPopup extends SmartView {
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setDeleteCommentHandler(this._callback.deleteClick);
     this.setFormSubmitHandler(this._callback.submitHandler);
+  }
+
+  setCommentDeleteShake(id) {
+    const commentButton = this.getElement().querySelector(`[data-id="${id}"]`);
+    const comment = commentButton.closest('.film-details__comment');
+    comment.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT}ms`;
+    setTimeout(() => {
+      parent.style.animation = '';
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _setInnerHandler() {

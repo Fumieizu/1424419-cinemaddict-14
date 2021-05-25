@@ -89,7 +89,7 @@ export default class film {
     this._popupComponent.getElement().scrollTop = scroll;
   }
 
-  setViewState(state) {
+  setViewState(state, comment) {
     const resetFormState = () => {
       this._popupComponent.updateData({
         isDisabled: false,
@@ -109,8 +109,11 @@ export default class film {
           isDeleting: true,
         });
         break;
-      case State.ABORTING:
+      case State.ABORTING_SAVING:
         this._popupComponent.shake(resetFormState);
+        break;
+      case State.ABORTING_DELETING:
+        this._popupComponent.setCommentDeleteShake(comment);
         break;
     }
   }
@@ -166,7 +169,7 @@ export default class film {
       scrollPosition: this._popupComponent.getElement().scrollTop,
     });
 
-    const newComments = this._film.comments.filter((comment) => comment.id !== commentId);
+    const newComments = this._film.comments.filter((comment) => comment !== commentId);
 
     this._changeData(
       UserAction.DELETE_COMMENT,

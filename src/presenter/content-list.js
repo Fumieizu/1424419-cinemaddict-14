@@ -102,24 +102,48 @@ export default class FilmBoard {
         });
         break;
       case UserAction.ADD_COMMENT:
-        this._filmPresenters.allFilmsList[update.id].setViewState(State.SAVING, comments);
-        // this._filmPresenters.topRatingList[update.id].setViewState(State.SAVING, comments);
-        // this._filmPresenters.mostCommentList[update.id].setViewState(State.SAVING, comments);
+        Object
+          .values(this._filmPresenters)
+          .forEach((presenter) => {
+            if (update.id in presenter) {
+              presenter[update.id].setViewState(State.SAVING, comments);
+            }
+          });
         this._api.addComment(update, comments).then((response) => {
           this._commentsModel.add(updateType, response.film, response.comments);
           this._filmsModel.update(updateType, response.film);
-        });
-        // .catch(() =>)?
+        })
+          .catch(() => {
+            Object
+              .values(this._filmPresenters)
+              .forEach((presenter) => {
+                if (update.id in presenter) {
+                  presenter[update.id].setViewState(State.ABORTING_SAVING, comments);
+                }
+              });
+          });
         break;
       case UserAction.DELETE_COMMENT:
-        this._filmPresenters.allFilmsList[update.id].setViewState(State.DELETING, comments);
-        // this._filmPresenters.topRatingList[update.id].setViewState(State.DELETING, comments);
-        // this._filmPresenters.mostCommentList[update.id].setViewState(State.DELETING, comments);
+        Object
+          .values(this._filmPresenters)
+          .forEach((presenter) => {
+            if (update.id in presenter) {
+              presenter[update.id].setViewState(State.DELETING, comments);
+            }
+          });
         this._api.deleteComment(comments).then(() =>{
           this._commentsModel.delete(updateType, comments);
           this._filmsModel.update(updateType, update);
-        });
-          // .catch(() =>)?
+        })
+          .catch(() => {
+            Object
+              .values(this._filmPresenters)
+              .forEach((presenter) => {
+                if (update.id in presenter) {
+                  presenter[update.id].setViewState(State.ABORTING_DELETING, comments);
+                }
+              });
+          });
     }
   }
 

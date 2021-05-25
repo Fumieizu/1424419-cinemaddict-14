@@ -53,7 +53,7 @@ export default class Api {
       .then((data) => {
         return ({
           film: FilmsModel.adaptToClient(data.movie),
-          comments: CommentsModel.adaptToClient(data.comments),
+          comments: data.comments.map(CommentsModel.adaptToClient),
         });
       });
   }
