@@ -8,13 +8,9 @@ export const sortByDate = (filmA, filmB) => dayjs(filmB.year).diff(dayjs(filmA.y
 
 export const sortByRating = (filmA, filmB) => filmB.rating - filmA.rating;
 
-export const getFilmCardDate = (date) => {
-  return dayjs(date).format('YYYY');
-};
+export const getFilmCardDate = (date) => dayjs(date).format('YYYY');
 
-export const getDateFromNow = (date) => {
-  return dayjs(date).fromNow();
-};
+export const getDateFromNow = (date) => dayjs(date).fromNow();
 
 export const getHumanizedDuration = (minutesTotal) => {
   const hours = Math.floor(minutesTotal / 60);

@@ -1,9 +1,6 @@
 import Abstract from './abstract.js';
 
 export default class Loading extends Abstract {
-  constructor() {
-    super();
-  }
   getTemplate() {
     return `<section class="films">
     <section class="films-list">

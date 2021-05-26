@@ -31,3 +31,10 @@ export const DatePeriod = {
   MONTH: 'month',
   YEAR: 'year',
 };
+
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING_SAVING: 'ABORTING_SAVING',
+  ABORTING_DELETING: 'ABORTING_DELETING',
+};
