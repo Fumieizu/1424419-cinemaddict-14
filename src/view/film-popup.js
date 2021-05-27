@@ -24,7 +24,7 @@ const createFilmComment = (comments, isDeleting) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${commentator}</span>
                 <span class="film-details__comment-day">${getDateFromNow(commentTime)}</span>
-                <button class="film-details__comment-delete" data-id="${id}" ${isDeleting ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
+                <button class="film-details__comment-delete" data-id="${id}" ${isDeleting ? 'disabled' : ''}>Delete</button>
               </p>
             </div>
           </li>
@@ -245,6 +245,12 @@ export default class FilmPopup extends SmartView {
     this.setFormSubmitHandler(this._callback.submitHandler);
   }
 
+  disableDeleteCommentButton(id) {
+    const commentButton = this.getElement().querySelector(`[data-id="${id}"]`);
+    commentButton.disabled = true;
+    commentButton.textContent = 'Deleting...';
+  }
+
   setCommentDeleteShake(id) {
     const commentButton = this.getElement().querySelector(`[data-id="${id}"]`);
     const comment = commentButton.closest('.film-details__comment');
@@ -279,11 +285,6 @@ export default class FilmPopup extends SmartView {
       evt.preventDefault();
 
       this._callback.submitHandler(FilmPopup.parsDataToComment(newComment));
-
-      this.updateData({
-        comment: null,
-        emotion: null,
-      });
     }
   }
 

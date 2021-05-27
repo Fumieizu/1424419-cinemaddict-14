@@ -28,3 +28,6 @@ export const getRandomArrayLength = (array) => {
   return newArray;
 };
 
+export const isOnline = () => {
+  return window.navigator.onLine;
+};

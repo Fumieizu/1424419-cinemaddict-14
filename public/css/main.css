@@ -66,6 +66,7 @@ body {
   max-width: 1240px;
   padding: var(--vertical-gap) var(--horizontal-gap) 0;
   width: 100%;
+  position: relative;
 }
 
 .hide-overflow {
@@ -1103,6 +1104,18 @@ button {
   min-height: 300px;
   padding-top: 50px;
   padding-bottom: 50px;
+}
+
+.toast-container {
+  display: block;
+  position: fixed;
+  color: crimson;
+  font-size: 50px;
+  text-shadow: 1px 1px 1px #000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 100;
 }
 
 @keyframes shake {
