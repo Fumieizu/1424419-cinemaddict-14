@@ -31,7 +31,7 @@ export default class Provider {
         });
     }
 
-    const storeFilms = Object.values(this._store.getItem());
+    const storeFilms = Object.values(this._store.getItems());
 
     return Promise.resolve(storeFilms.map(FilmsModel.adaptToClient));
   }
@@ -46,7 +46,7 @@ export default class Provider {
         });
     }
 
-    const storeComments = Object.values(this._store.getItem());
+    const storeComments = Object.values(this._store.getItems());
 
     return Promise.resolve(storeComments.map(CommentsModel.adaptToClient));
   }
@@ -83,7 +83,7 @@ export default class Provider {
 
   sync() {
     if (isOnline()) {
-      const storeFilms =Object.values(this._store.getItem());
+      const storeFilms =Object.values(this._store.getItems());
       return this._api.sync(storeFilms)
         .then((response) => {
           const updatedFilms = getSyncedFilms(response.updated);
