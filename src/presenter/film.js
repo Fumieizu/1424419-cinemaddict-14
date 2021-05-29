@@ -141,6 +141,11 @@ export default class film {
       id: this._film.id,
     });
     document.addEventListener('keydown', this._onEscKeyDownHandler);
+
+    if (!isOnline()) {
+      toast('You can\'t use comment OFFLINE');
+      this._popupComponent.shake();
+    }
   }
 
   _removePopup() {

@@ -1,5 +1,4 @@
 import FilmsModel from '../model/films.js';
-import CommentsModel from '../model/comments.js';
 import {isOnline} from '../utils/common.js';
 
 const getSyncedFilms = (items) => {
@@ -38,17 +37,10 @@ export default class Provider {
 
   getComments(filmId) {
     if (isOnline()) {
-      return this._api.getComments(filmId)
-        .then((comment) => {
-          const item = createStoreStructure(comment.map(CommentsModel.adaptToServer));
-          this._store.setItems(item);
-          return comment;
-        });
+      return this._api.getComments(filmId);
     }
 
-    const storeComments = Object.values(this._store.getItems());
-
-    return Promise.resolve(storeComments.map(CommentsModel.adaptToClient));
+    return Promise.reject();
   }
 
   updateFilm(film) {
