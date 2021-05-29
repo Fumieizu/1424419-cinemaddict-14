@@ -106,7 +106,9 @@ export default class FilmBoard {
           .values(this._filmPresenters)
           .forEach((presenter) => {
             if (update.id in presenter) {
-              presenter[update.id].setViewState(State.SAVING, comments);
+              if (presenter[update.id].hasOpenPopup()) {
+                presenter[update.id].setViewState(State.SAVING, comments);
+              }
             }
           });
         this._api.addComment(update, comments).then((response) => {
