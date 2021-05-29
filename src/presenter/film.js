@@ -96,6 +96,10 @@ export default class film {
     this._popupComponent.getElement().scrollTop = scroll;
   }
 
+  hasOpenPopup() {
+    return this._mode === Mode.POPUP;
+  }
+
   setViewState(state, comment) {
     const resetFormState = () => {
       this._popupComponent.updateData({

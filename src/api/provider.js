@@ -4,7 +4,7 @@ import {isOnline} from '../utils/common.js';
 
 const getSyncedFilms = (items) => {
   return items.filter(({success}) => success)
-    .map(({payload}) => payload.task);
+    .map(({payload}) => payload.film);
 };
 
 const createStoreStructure = (items) => {
@@ -26,7 +26,7 @@ export default class Provider {
       return this._api.getFilms()
         .then((films) => {
           const item = createStoreStructure(films.map(FilmsModel.adaptToServer));
-          this._store.setItem(item);
+          this._store.setItems(item);
           return films;
         });
     }
@@ -41,7 +41,7 @@ export default class Provider {
       return this._api.getComments(filmId)
         .then((comment) => {
           const item = createStoreStructure(comment.map(CommentsModel.adaptToServer));
-          this._store.setItem(item);
+          this._store.setItems(item);
           return comment;
         });
     }
@@ -55,12 +55,12 @@ export default class Provider {
     if (isOnline()) {
       return this._api.updateFilm(film)
         .then((updatedFilm) => {
-          this._store.setItem(updatedFilm.id, FilmsModel.adaptToServer(updatedFilm));
+          this._store.setItems(updatedFilm.id, FilmsModel.adaptToServer(updatedFilm));
           return updatedFilm;
         });
     }
 
-    this._store.setItem(film.id, FilmsModel.adaptToServer(Object.assign({}, film)));
+    this._store.setItems(film.id, FilmsModel.adaptToServer(Object.assign({}, film)));
 
     return Promise.resolve(film);
   }
@@ -90,7 +90,7 @@ export default class Provider {
 
           const items = createStoreStructure(updatedFilms);
 
-          this._store.setItem(items);
+          this._store.setItems(items);
         });
     }
 

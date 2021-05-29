@@ -128,7 +128,9 @@ export default class FilmBoard {
           .values(this._filmPresenters)
           .forEach((presenter) => {
             if (update.id in presenter) {
-              presenter[update.id].setViewState(State.DELETING, comments);
+              if (presenter[update.id].hasOpenPopup()) {
+                presenter[update.id].setViewState(State.DELETING, comments);
+              }
             }
           });
         this._api.deleteComment(comments).then(() =>{
