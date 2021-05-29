@@ -47,12 +47,12 @@ export default class Provider {
     if (isOnline()) {
       return this._api.updateFilm(film)
         .then((updatedFilm) => {
-          this._store.setItems(updatedFilm.id, FilmsModel.adaptToServer(updatedFilm));
+          this._store.setItem(updatedFilm.id, FilmsModel.adaptToServer(updatedFilm));
           return updatedFilm;
         });
     }
 
-    this._store.setItems(film.id, FilmsModel.adaptToServer(Object.assign({}, film)));
+    this._store.setItem(film.id, FilmsModel.adaptToServer(Object.assign({}, film)));
 
     return Promise.resolve(film);
   }
@@ -75,7 +75,7 @@ export default class Provider {
 
   sync() {
     if (isOnline()) {
-      const storeFilms =Object.values(this._store.getItems());
+      const storeFilms = Object.values(this._store.getItems());
       return this._api.sync(storeFilms)
         .then((response) => {
           const updatedFilms = getSyncedFilms(response.updated);

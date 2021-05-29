@@ -144,7 +144,6 @@ export default class film {
 
     if (!isOnline()) {
       toast('You can\'t use comment OFFLINE');
-      this._popupComponent.shake();
     }
   }
 
