@@ -7,17 +7,21 @@ import CommentsModel from './model/comments.js';
 import FilterModel from './model/filter';
 import {UpdateType} from './const.js';
 import FooterStatistic from './view/footer-statistic.js';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 import {RenderPosition, render} from './utils/render';
-import Api from './api.js';
-import './utils/statistic.js';
+import Api from './api/api.js';
 
 
 const AUTHORIZATION = 'Basic Wqp1I24pIOl20';
 const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
-
+const STORE_PREFIX = 'cinemaddict-localstorage';
+const STORE_VER = 'v14';
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
-
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const filmsModel = new FilmsModel();
 
@@ -33,7 +37,7 @@ const siteFooter = document.querySelector('.footer');
 
 
 const statisticsPresenter = new StatisticPresenter(siteMain, filmsModel);
-const boardPresenter = new FilmBoardPresenter(siteMain, siteBody, filmsModel, commentsModel, filterModel, api);
+const boardPresenter = new FilmBoardPresenter(siteMain, siteBody, filmsModel, commentsModel, filterModel, apiWithProvider);
 
 
 const renderStatistic = () => {
@@ -48,7 +52,7 @@ const renderSiteContent = () => {
 
 boardPresenter.init();
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(UpdateType.INIT, films);
     new ProfileRankPresenter(siteHeader,filmsModel).init();
@@ -61,3 +65,15 @@ api.getFilms()
     render(siteFooter, new FooterStatistic(filmsModel.get().length), RenderPosition.BEFOREEND);
   });
 
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
+
+window.addEventListener('online', () => {
+  document.title = document.title.replace(' [offline]', '');
+  apiWithProvider.sync();
+});
+
+window.addEventListener('offline', () => {
+  document.title += ' [offline]';
+});

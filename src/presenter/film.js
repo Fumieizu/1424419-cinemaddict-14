@@ -2,10 +2,17 @@ import FilmTemplateView from '../view/film-card.js';
 import FilmPopupView from '../view/film-popup.js';
 import {UserAction, UpdateType, State} from '../const.js';
 import {RenderPosition, render, remove, replace} from '../utils/render.js';
+import {toast} from '../utils/toast.js';
+import {isOnline} from '../utils/common.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
   POPUP: 'POPUP',
+};
+
+const ErrorMessage = {
+  DELETE_ERROR: 'You can\'t delete comment. Offline mode',
+  SAVING_ERROR: 'You can\'t send comment. Offline mode',
 };
 
 export default class film {
@@ -89,6 +96,10 @@ export default class film {
     this._popupComponent.getElement().scrollTop = scroll;
   }
 
+  hasOpenPopup() {
+    return this._mode === Mode.POPUP;
+  }
+
   setViewState(state, comment) {
     const resetFormState = () => {
       this._popupComponent.updateData({
@@ -104,15 +115,19 @@ export default class film {
         });
         break;
       case State.DELETING:
-        this._popupComponent.updateData({
-          isDisabled: true,
-          isDeleting: true,
-        });
+        this._popupComponent.disableDeleteCommentButton(comment);
         break;
       case State.ABORTING_SAVING:
+        if (!isOnline()) {
+          toast(ErrorMessage.SAVING_ERROR);
+        }
         this._popupComponent.shake(resetFormState);
         break;
       case State.ABORTING_DELETING:
+        if (!isOnline()) {
+          toast(ErrorMessage.DELETE_ERROR);
+        }
+
         this._popupComponent.setCommentDeleteShake(comment);
         break;
     }
@@ -126,6 +141,10 @@ export default class film {
       id: this._film.id,
     });
     document.addEventListener('keydown', this._onEscKeyDownHandler);
+
+    if (!isOnline()) {
+      toast('You can\'t use comment OFFLINE');
+    }
   }
 
   _removePopup() {
