@@ -11,6 +11,7 @@ import Store from './api/store.js';
 import Provider from './api/provider.js';
 import {RenderPosition, render} from './utils/render';
 import Api from './api/api.js';
+import {toast} from './utils/toast.js';
 
 
 const AUTHORIZATION = 'Basic Wqp1I24pIOl20';
@@ -18,6 +19,7 @@ const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
 const STORE_PREFIX = 'cinemaddict-localstorage';
 const STORE_VER = 'v14';
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const OFFLINE_MESSAGE = 'OFFLINE';
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
@@ -76,4 +78,5 @@ window.addEventListener('online', () => {
 
 window.addEventListener('offline', () => {
   document.title += ' [offline]';
+  toast(OFFLINE_MESSAGE);
 });

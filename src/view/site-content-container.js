@@ -35,4 +35,8 @@ export default class SiteContainer extends AbstractView {
   getFilmListMostCommented () {
     return  this.getElement().querySelector('.films-list--most-commented');
   }
+
+  removeExtraList(element) {
+    return element.remove();
+  }
 }

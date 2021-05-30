@@ -44,7 +44,6 @@ export default class FilmBoard {
     this._filmListTopRatedContainer = this._siteContainer.getFilmListTopRated().querySelector('.films-list__container');
     this._filmListMostCommentedContainer = this._siteContainer.getFilmListMostCommented().querySelector('.films-list__container');
 
-
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
@@ -331,7 +330,9 @@ export default class FilmBoard {
     const ratedFilm = films.slice().sort((a, b) => b.rating - a.rating);
 
     const film = ratedFilm.slice(0, Math.min(filmsCount, EXTRA_FILMS_COUNT));
-
+    if (film[0].rating === 0) {
+      this._siteContainer.removeExtraList(this._siteContainer.getFilmListTopRated());
+    }
 
     this._renderFilms(this._filmListTopRatedContainer, film);
   }
@@ -343,7 +344,9 @@ export default class FilmBoard {
 
     const film = mostCommented.slice(0, Math.min(filmsCount, EXTRA_FILMS_COUNT));
 
-
+    if (film[0].comments.length === 0) {
+      this._siteContainer.removeExtraList(this._siteContainer.getFilmListMostCommented());
+    }
     this._renderFilms(this._filmListMostCommentedContainer, film);
   }
 

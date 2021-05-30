@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 import SmartView from './smart';
-// import he from 'he';
+import he from 'he';
 import {getHumanizedDuration, getDateFromNow} from '../utils/film.js';
 
 const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
@@ -20,7 +20,7 @@ const createFilmComment = (comments, isDeleting) => {
               <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
-              <p class="film-details__comment-text">${text}</p>
+              <p class="film-details__comment-text">${he.encode(text)}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${commentator}</span>
                 <span class="film-details__comment-day">${getDateFromNow(commentTime)}</span>
@@ -141,7 +141,7 @@ const createFilmPopup = ({poster, title, originalName, emotion, isDeleting, isDi
           <div class="film-details__add-emoji-label">${!emotion ? '' : `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">`}</div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${comment}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(comment)}</textarea>
           </label>
 
           <div class="film-details__emoji-list">${createEmojiList(emotion)}</div>
@@ -170,30 +170,6 @@ export default class FilmPopup extends SmartView {
 
   getTemplate() {
     return createFilmPopup(this._data);
-  }
-
-  static parsFilmToData(film, comments) {
-    return Object.assign(
-      {},
-      film,
-      {
-        isComments: comments.get(),
-        isDeleting: false,
-        isDisabled: false,
-        emotion: null,
-        comment: '',
-      },
-    );
-  }
-
-  static parsDataToComment(data) {
-    delete data.comment;
-    delete data.emotion;
-    delete data.isComments;
-    delete data.isDisabled;
-    delete data.isDeleting;
-
-    return Object.assign({}, data);
   }
 
   setCloseButtonHandler(callback) {
@@ -322,5 +298,29 @@ export default class FilmPopup extends SmartView {
 
   _watchedClickHandler() {
     this._callback.watchedClick();
+  }
+
+  static parsFilmToData(film, comments) {
+    return Object.assign(
+      {},
+      film,
+      {
+        isComments: comments.get(),
+        isDeleting: false,
+        isDisabled: false,
+        emotion: null,
+        comment: '',
+      },
+    );
+  }
+
+  static parsDataToComment(data) {
+    delete data.comment;
+    delete data.emotion;
+    delete data.isComments;
+    delete data.isDisabled;
+    delete data.isDeleting;
+
+    return Object.assign({}, data);
   }
 }

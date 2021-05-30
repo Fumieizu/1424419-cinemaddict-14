@@ -4,18 +4,20 @@ import duration from 'dayjs/plugin/duration';
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
-export const sortByDate = (filmA, filmB) => dayjs(filmB.year).diff(dayjs(filmA.year));
+const sortByDate = (filmA, filmB) => dayjs(filmB.year).diff(dayjs(filmA.year));
 
-export const sortByRating = (filmA, filmB) => filmB.rating - filmA.rating;
+const sortByRating = (filmA, filmB) => filmB.rating - filmA.rating;
 
-export const getFilmCardDate = (date) => dayjs(date).format('YYYY');
+const getFilmCardDate = (date) => dayjs(date).format('YYYY');
 
-export const getDateFromNow = (date) => dayjs(date).fromNow();
+const getDateFromNow = (date) => dayjs(date).fromNow();
 
-export const getHumanizedDuration = (minutesTotal) => {
+const getHumanizedDuration = (minutesTotal) => {
   const hours = Math.floor(minutesTotal / 60);
   const minutes = minutesTotal % 60;
   const hoursOutput = hours ? hours + 'h ' : '';
 
   return hoursOutput + minutes + 'm';
 };
+
+export {sortByDate, sortByRating, getFilmCardDate, getDateFromNow, getHumanizedDuration};
