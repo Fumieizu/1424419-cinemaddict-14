@@ -1,4 +1,4 @@
-export const ProfileRanks = {
+const ProfileRanks = {
   UNRANKED: 'Unranked',
   NOVICE: 'Novice',
   FAN: 'Fan',
@@ -34,8 +34,10 @@ const getProfileRank = (count) => {
   }
 };
 
-export const generateProfileRank = (films) => {
+const generateProfileRank = (films) => {
   const watchedFilmCount = films.filter((film) => film.isHistory).length;
 
   return getProfileRank(watchedFilmCount);
 };
+
+export {generateProfileRank, ProfileRanks};

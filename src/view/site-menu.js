@@ -44,6 +44,7 @@ export default class SiteMenu extends AbstractView {
 
   setStatsClickHandler(callback) {
     this._callback.statsClick = callback;
+
     this.getElement().querySelector('.main-navigation__additional')
       .addEventListener('click', this._statsClickHandler);
   }
@@ -54,6 +55,12 @@ export default class SiteMenu extends AbstractView {
     }
 
     evt.preventDefault();
+
+    if (evt.target.classList.contains('main-navigation__item-count')) {
+      this._callback.filterTypeChange(evt.target.parentNode.dataset.filter);
+      return;
+    }
+
     this._callback.filterTypeChange(evt.target.dataset.filter);
   }
 

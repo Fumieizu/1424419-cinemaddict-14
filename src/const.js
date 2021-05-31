@@ -1,30 +1,30 @@
-export const SortType = {
+const SortType = {
   DEFAULT: 'default',
   BY_DATE: 'by-date',
   BY_RATING: 'by-rating',
 };
 
-export const UserAction = {
+const UserAction = {
   ADD_COMMENT: 'ADD_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
   UPDATE_FILM: 'UPDATE_FILM',
 };
 
-export const UpdateType = {
+const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
 };
 
-export const FilterType = {
+const FilterType = {
   ALL: 'All',
   WATCHLIST: 'Watchlist',
   HISTORY: 'History',
   FAVORITES: 'Favorites',
 };
 
-export const DatePeriod = {
+const DatePeriod = {
   ALL_TIME: 'all-time',
   TODAY: 'day',
   WEEK: 'week',
@@ -32,9 +32,11 @@ export const DatePeriod = {
   YEAR: 'year',
 };
 
-export const State = {
+const State = {
   SAVING: 'SAVING',
   DELETING: 'DELETING',
   ABORTING_SAVING: 'ABORTING_SAVING',
   ABORTING_DELETING: 'ABORTING_DELETING',
 };
+
+export {SortType, UserAction, UpdateType, FilterType, DatePeriod, State};
