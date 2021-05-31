@@ -82,6 +82,7 @@ export default class film {
     remove(this._filmComponent);
     remove(this._popupComponent);
     document.removeEventListener('keydown', this._onEscKeyDownHandler);
+    this._popupContainer.classList.remove('hide-overflow');
   }
 
   resetView() {
