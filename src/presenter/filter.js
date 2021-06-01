@@ -58,22 +58,22 @@ export default class Filter {
     return [
       {
         type: FilterType.ALL,
-        name: 'All movies',
+        name: FilterType.ALL_MOVIES,
         count: filter[FilterType.ALL](films).length,
       },
       {
         type: FilterType.WATCHLIST,
-        name: 'Watchlist',
+        name: FilterType.WATCHLIST,
         count: filter[FilterType.WATCHLIST](films).length,
       },
       {
         type: FilterType.HISTORY,
-        name: 'History',
+        name: FilterType.HISTORY,
         count: filter[FilterType.HISTORY](films).length,
       },
       {
         type: FilterType.FAVORITES,
-        name: 'Favorites',
+        name: FilterType.FAVORITES,
         count: filter[FilterType.FAVORITES](films).length,
       },
     ];

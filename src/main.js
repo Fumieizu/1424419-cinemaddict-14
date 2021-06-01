@@ -1,4 +1,4 @@
-import FilmBoardPresenter from './presenter/content-list.js';
+import FilmBoardPresenter from './presenter/film-board.js';
 import FilterPresenter from './presenter/filter.js';
 import ProfileRankPresenter from './presenter/profile-rank.js';
 import StatisticPresenter from './presenter/statistic.js';

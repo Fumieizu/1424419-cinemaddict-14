@@ -1,4 +1,4 @@
-import FilmTemplateView from '../view/film-card.js';
+import FilmTemplateView from '../view/film-template.js';
 import FilmPopupView from '../view/film-popup.js';
 import {UserAction, UpdateType, State} from '../const.js';
 import {RenderPosition, render, remove, replace} from '../utils/render.js';
@@ -15,7 +15,9 @@ const ErrorMessage = {
   SAVING_ERROR: 'You can\'t send comment. Offline mode',
 };
 
-export default class film {
+const HIDE_OVERFLOW = 'hide-overflow';
+
+export default class Film {
   constructor(filmContainer, popupContainer, changeData, changeMode, commentsModel, onPopupOpen, api) {
     this._filmContainer = filmContainer;
     this._popupContainer = popupContainer;
@@ -82,7 +84,7 @@ export default class film {
     remove(this._filmComponent);
     remove(this._popupComponent);
     document.removeEventListener('keydown', this._onEscKeyDownHandler);
-    this._popupContainer.classList.remove('hide-overflow');
+    this._popupContainer.classList.remove(HIDE_OVERFLOW);
   }
 
   resetView() {
@@ -135,7 +137,7 @@ export default class film {
   }
 
   _renderPopup() {
-    this._popupContainer.classList.add('hide-overflow');
+    this._popupContainer.classList.add(HIDE_OVERFLOW);
     render(this._popupContainer, this._popupComponent, RenderPosition.BEFOREEND);
     this._mode = Mode.POPUP;
     this._onPopupOpen({
@@ -150,7 +152,7 @@ export default class film {
 
   _removePopup() {
     this._popupContainer.removeChild(this._popupComponent.getElement());
-    this._popupContainer.classList.remove('hide-overflow');
+    this._popupContainer.classList.remove(HIDE_OVERFLOW);
     this._mode = Mode.DEFAULT;
     this._onPopupOpen(null);
     document.removeEventListener('keydown', this._onEscKeyDownHandler);

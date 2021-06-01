@@ -19,6 +19,7 @@ const UpdateType = {
 
 const FilterType = {
   ALL: 'All',
+  ALL_MOVIES: 'All movies',
   WATCHLIST: 'Watchlist',
   HISTORY: 'History',
   FAVORITES: 'Favorites',

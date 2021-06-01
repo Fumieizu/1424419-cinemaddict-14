@@ -1,4 +1,4 @@
-import StatisticView from '../view/site-statistics.js';
+import StatisticView from '../view/statistics.js';
 import {render, remove, RenderPosition} from '../utils/render.js';
 import {DatePeriod} from '../const.js';
 import {getFilmGenresStat, getWatchedFilmByRange} from '../utils/statistic.js';

@@ -4,6 +4,7 @@ import SmartView from './smart.js';
 import {DatePeriod} from '../const.js';
 
 const BAR_HEIGHT = 50;
+const PROFILE_RANK_UNRANKED = 'Unranked';
 
 const createChart = (statisticCtx, {genres, count}) => {
 
@@ -89,7 +90,7 @@ const createStatisticsTemplate = ({period, watchedFilms,  genres, profileRank}) 
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">${profileRank}</span>
+      <span class="statistic__rank-label">${profileRank === PROFILE_RANK_UNRANKED ? '' : profileRank}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">

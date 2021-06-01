@@ -1,5 +1,5 @@
 import SortView from '../view/sort.js';
-import SiteContainerView from '../view/site-content-container.js';
+import SiteContainerView from '../view/site-container.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
 import NoFilmView from '../view/no-film.js';
 import LoadingView from '../view/loading.js';
@@ -65,7 +65,9 @@ export default class FilmBoard {
   }
 
   hide() {
-    this._sort.hide();
+    if (this._sort) {
+      this._sort.hide();
+    }
     this._siteContainer.hide();
   }
 
@@ -349,6 +351,7 @@ export default class FilmBoard {
     if (film.every((item) => item.comments.length === 0)) {
       this._siteContainer.removeExtraList(this._siteContainer.getFilmListMostCommented());
     }
+
     this._renderFilms(this._filmListMostCommentedContainer, film);
   }
 

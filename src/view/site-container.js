@@ -37,6 +37,10 @@ export default class SiteContainer extends AbstractView {
   }
 
   removeExtraList(element) {
+    if (!this.getElement().contains(element)) {
+      return;
+    }
+
     return element.remove();
   }
 }

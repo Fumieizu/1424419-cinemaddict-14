@@ -18,6 +18,10 @@ export default class ProfileRank {
 
     this._profileRankComponent = new ProfileRatingView(generateProfileRank(films));
     render(this._container, this._profileRankComponent, RenderPosition.BEFOREEND);
+
+    if (films.length === 0 || generateProfileRank(films) === ProfileRanks.UNRANKED) {
+      remove(this._profileRankComponent);
+    }
   }
 
   _getUpdatedRank(rank) {
